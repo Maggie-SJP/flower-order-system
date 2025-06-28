@@ -1,0 +1,32 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5679:5678" # host of flow order system:container
+    env_file:
+      - .env
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    restart: always
+    depends_on:
+      - ollama
+    networks:
+      - shared-net
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - shared-net
+
+volumes:
+  ollama_data:
+  n8n_data:
+
+networks:
+  shared-net:
