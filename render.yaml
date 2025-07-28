@@ -1,4 +1,4 @@
-This file defines the services to be deployed on Render.
+# This file defines the services to be deployed on Render.
 # It uses Render Blueprints for infrastructure as code.
 
 services:
