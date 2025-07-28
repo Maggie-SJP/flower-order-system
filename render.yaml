@@ -1,32 +1,41 @@
 services:
   - type: web
-    name: n8n-flower-order-system # Updated service name
+    name: n8n-flower-order-system
     env: docker
-    repo: https://github.com/Maggie-SJP/flower-order-system # Added repository URL
-    branch: main # Added branch
-    dockerfilePath: ./docker/Dockerfile # Updated Dockerfile path
+    repo: https://github.com/Maggie-SJP/flower-order-system
+    branch: main
+    dockerfilePath: ./docker/Dockerfile
     envVars:
       - key: DB_TYPE
-        value: postgresdb # Corrected from 'postgres' to 'postgresdb'
-      - key: DB_POSTGRESDB_HOST
+        value: postgresdb
+
+      - key: DB_POSTGRES_HOST
         value: dpg-d23epn2dbo4c7385a96g-a
-      - key: DB_POSTGRESDB_PORT
+      - key: DB_POSTGRES_PORT
         value: 5432
-      - key: DB_POSTGRESDB_DATABASE
+      - key: DB_POSTGRES_DATABASE
         value: n8n_flower_order_db
-      - key: DB_POSTGRESDB_USER
+      - key: DB_POSTGRES_USER
         value: n8n_flower_order_db_user
-      - key: DB_POSTGRESDB_PASSWORD
-        # Removed sync: false as it conflicts with explicitly provided value
+      - key: DB_POSTGRES_PASSWORD
         value: 2uQzeWYm4PO2V3p0RjwLkmATqwtdpwnF
+
       - key: GENERIC_TIMEZONE
         value: Australia/Brisbane
+
       - key: N8N_HOST
         value: n8n-flower-order-system.onrender.com
       - key: N8N_PORT
         value: 5678
       - key: N8N_PROTOCOL
         value: https
-      # Removed N8N_BASIC_AUTH_ACTIVE, N8N_BASIC_AUTH_USER, N8N_BASIC_AUTH_PASSWORD, N8N_ENCRYPTION_KEY
-      # as they are not present in your provided working config.
-      # If you need basic auth or encryption key, you'll need to add them back.
+
+      # 若未來需要保護介面登入，請再加入以下這些（可選）：
+      # - key: N8N_BASIC_AUTH_ACTIVE
+      #   value: "true"
+      # - key: N8N_BASIC_AUTH_USER
+      #   value: your_username
+      # - key: N8N_BASIC_AUTH_PASSWORD
+      #   value: your_password
+      # - key: N8N_ENCRYPTION_KEY
+      #   value: a_secure_generated_key
