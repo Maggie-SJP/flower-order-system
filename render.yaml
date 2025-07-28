@@ -17,7 +17,7 @@ services:
       - key: DB_POSTGRESDB_USER
         value: n8n_flower_order_db_user
       - key: DB_POSTGRESDB_PASSWORD
-        sync: false # Ensure sensitive value is not synced to GitHub
+        # Removed sync: false as it conflicts with explicitly provided value
         value: 2uQzeWYm4PO2V3p0RjwLkmATqwtdpwnF
       - key: GENERIC_TIMEZONE
         value: Australia/Brisbane
