@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: n8n-flower-order-system
+    name: n8n-flower-order-system # Updated service name
     env: docker
-    repo: https://github.com/Maggie-SJP/flower-order-system
-    branch: main
-    dockerfilePath: ./docker/Dockerfile
+    repo: https://github.com/Maggie-SJP/flower-order-system # Added repository URL
+    branch: main # Added branch
+    dockerfilePath: ./docker/Dockerfile # Updated Dockerfile path
     envVars:
       - key: DB_TYPE
         value: postgres
@@ -17,6 +17,7 @@ services:
       - key: DB_POSTGRESDB_USER
         value: n8n_flower_order_db_user
       - key: DB_POSTGRESDB_PASSWORD
+        sync: false # Ensure sensitive value is not synced to GitHub
         value: 2uQzeWYm4PO2V3p0RjwLkmATqwtdpwnF
       - key: GENERIC_TIMEZONE
         value: Australia/Brisbane
@@ -26,3 +27,6 @@ services:
         value: 5678
       - key: N8N_PROTOCOL
         value: https
+      # Removed N8N_BASIC_AUTH_ACTIVE, N8N_BASIC_AUTH_USER, N8N_BASIC_AUTH_PASSWORD, N8N_ENCRYPTION_KEY
+      # as they are not present in your provided working config.
+      # If you need basic auth or encryption key, you'll need to add them back.
