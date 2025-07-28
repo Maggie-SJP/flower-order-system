@@ -1,23 +1,12 @@
+# 使用官方 n8n 映像
 FROM n8nio/n8n:latest
 
-# Optional: copy any custom scripts or config
-# COPY ./entrypoint.sh /entrypoint.sh
-# RUN chmod +x /entrypoint.sh
-
-# Copy your main n8n workflow file into the container
-# Assuming your workflow file (e.g., n8n_flower_order_system_wf.json) is in the root of the repository
-# and Dockerfile is in a subdirectory (e.g., 'docker/Dockerfile').
-# Render's build context is usually the repository root when dockerfilePath is specified.
+# 將你預先定義好的 workflow 匯入檔案複製進 container
+# 注意：Render 的建置上下文是 repo 根目錄
 COPY n8n_flower_order_system_wf.json /files/n8n_flower_order_system_wf.json
 
-# If needed: run custom entrypoint script
-# ENTRYPOINT ["/entrypoint.sh"]
-
-# Expose the port n8n runs on
+# 指定 n8n 預設埠（可省略，僅作紀錄用途）
 EXPOSE 5678
 
-# Command to run n8n
-# Use the full path to n8n executable
-# This will start n8n and automatically import the workflow on startup.
-# Workflows and credentials will be managed via the UI and database.
-CMD ["n8n", "start", "--workflow=/files/n8n_flower_order_system_wf.json"]
+# 啟動時先匯入 workflow（會覆蓋已有的），再啟動 n8n
+CMD ["sh", "-c", "n8n import:workflow --input /files/n8n_flower_order_system_wf.json --overwrite && n8n start"]
