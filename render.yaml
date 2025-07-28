@@ -70,7 +70,6 @@ services:
   - type: pserv # PostgreSQL service for n8n database
     name: n8n-database
     plan: starter # Or 'standard' for more resources
-    database: # <-- **新增此區塊**
-      name: n8n_db # Name of the database <-- **嵌套在此區塊下**
-      user: n8n_user # Database user <-- **嵌套在此區塊下**
+    databaseName: n8n_db # Name of the database
+    user: n8n_user # Database user
     # Render will automatically generate a strong password for the database user
