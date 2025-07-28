@@ -1,87 +1,40 @@
-# This file defines the services to be deployed on Render.
-# It uses Render Blueprints for infrastructure as code.
-
 services:
   - type: web
-    name: n8n-instance
-    env: docker # Use Dockerfile for building
-    dockerfilePath: docker/Dockerfile # Path to your Dockerfile within the repository
-    buildCommand: docker build -t n8n-instance . # Command to build the Docker image
-    startCommand: n8n start # Command to start n8n
-    plan: starter # Or 'standard' for more resources. Choose based on your needs.
-    healthCheckPath: /healthz # n8n's health check endpoint
+    name: n8n-flower-order-system
+    env: docker
+    plan: free
+    repo: https://github.com/Maggie-SJP/flower-order-system
+    branch: main
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: WEBHOOK_URL
-        generateValue: true # Render will generate this URL for you
-
       - key: N8N_HOST
-        fromService:
-          type: web
-          name: n8n-instance
-          property: host
-
+        value: n8n-flower-order-system.onrender.com
+      - key: N8N_PORT
+        value: 5678
       - key: N8N_PROTOCOL
         value: https
-
-      - key: N8N_PORT
-        value: 5678 # Default n8n port
-
+      - key: WEBHOOK_URL
+        value: https://n8n-flower-order-system.onrender.com
+      - key: GENERIC_TIMEZONE
+        value: Australia/Brisbane
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
-
       - key: N8N_BASIC_AUTH_USER
-        sync: false
-        generateValue: true
-
+        value: your-username   # <<== 改成你想設的帳號
       - key: N8N_BASIC_AUTH_PASSWORD
-        sync: false
-        generateValue: true
+        value: your-password   # <<== 改成你想設的密碼
 
-      - key: N8N_ENCRYPTION_KEY
-        sync: false
-        generateValue: true
-
+      # PostgreSQL 連線設定
       - key: DB_TYPE
-        value: postgresdb
-
-      - key: DB_POSTGRES_HOST
-        fromService:
-          type: pserv
-          name: n8n-database
-          property: host
-
-      - key: DB_POSTGRES_PORT
-        fromService:
-          type: pserv
-          name: n8n-database
-          property: port
-
-      - key: DB_POSTGRES_DATABASE
-        fromService:
-          type: pserv
-          name: n8n-database
-          property: database
-
-      - key: DB_POSTGRES_USER
-        fromService:
-          type: pserv
-          name: n8n-database
-          property: user
-
-      - key: DB_POSTGRES_PASSWORD
-        fromService:
-          type: pserv
-          name: n8n-database
-          property: password
-
-      # Add other credentials if needed:
-      # - key: GOOGLE_SHEETS_CREDENTIALS_DATA
-      #   sync: false
-      #   value: "YOUR_N8N_CREDENTIALS_JSON_HERE"
-
-  - type: pserv # PostgreSQL service for n8n database
-    name: n8n-database
-    plan: starter
-    properties:
-    databaseName: n8n_db
-    user: n8n_user
+        value: postgres
+      - key: DB_POSTGRESDB_HOST
+        value: dpg-d23epn2dbo4c7385a96g-a
+      - key: DB_POSTGRESDB_PORT
+        value: 5432
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n_flower_order_db
+      - key: DB_POSTGRESDB_USER
+        value: n8n_flower_order_db_user
+      - key: DB_POSTGRESDB_PASSWORD
+        value: 2uQzeWYm4PO2V3p0RjwLkmATqwtdpwnF
