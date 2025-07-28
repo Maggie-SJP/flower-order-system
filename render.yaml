@@ -83,5 +83,5 @@ services:
     name: n8n-database
     plan: starter
     properties:
-      databaseName: n8n_db
-      user: n8n_user
+    databaseName: n8n_db
+    user: n8n_user
