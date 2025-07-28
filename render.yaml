@@ -1,6 +1,5 @@
 # This file defines the services to be deployed on Render.
 # It uses Render Blueprints for infrastructure as code.
-
 services:
   - type: web
     name: n8n-instance
@@ -71,6 +70,7 @@ services:
   - type: pserv # PostgreSQL service for n8n database
     name: n8n-database
     plan: starter # Or 'standard' for more resources
-    databaseName: n8n_db # Name of the database
-    user: n8n_user # Database user
+    database: # <-- **新增此區塊**
+      name: n8n_db # Name of the database <-- **嵌套在此區塊下**
+      user: n8n_user # Database user <-- **嵌套在此區塊下**
     # Render will automatically generate a strong password for the database user
