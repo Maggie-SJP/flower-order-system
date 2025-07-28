@@ -1,0 +1,76 @@
+This file defines the services to be deployed on Render.
+# It uses Render Blueprints for infrastructure as code.
+
+services:
+  - type: web
+    name: n8n-instance
+    env: docker # Use Dockerfile for building
+    dockerfilePath: docker/Dockerfile # Path to your Dockerfile within the repository
+    buildCommand: docker build -t n8n-instance . # Command to build the Docker image
+    startCommand: n8n start # Command to start n8n
+    plan: starter # Or 'standard' for more resources. Choose based on your needs.
+    healthCheckPath: /healthz # n8n's health check endpoint
+    envVars:
+      - key: WEBHOOK_URL
+        generateValue: true # Render will generate this URL for you
+      - key: N8N_HOST
+        fromService:
+          type: web
+          name: n8n-instance
+          property: host
+      - key: N8N_PROTOCOL
+        value: https
+      - key: N8N_PORT
+        value: 5678 # Default n8n port
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true" # Enable basic authentication for security
+      - key: N8N_BASIC_AUTH_USER
+        sync: false # Do not sync this value to GitHub
+        generateValue: true # Render will generate a strong password for you
+      - key: N8N_BASIC_AUTH_PASSWORD
+        sync: false # Do not sync this value to GitHub
+        generateValue: true # Render will generate a strong password for you
+      - key: N8N_ENCRYPTION_KEY # VERY IMPORTANT: Used for encrypting credentials
+        sync: false # Do not sync this value to GitHub
+        generateValue: true # Render will generate a strong key for you
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRES_HOST
+        fromService:
+          type: pserv
+          name: n8n-database # Name of your PostgreSQL service
+          property: host
+      - key: DB_POSTGRES_PORT
+        fromService:
+          type: pserv
+          name: n8n-database
+          property: port
+      - key: DB_POSTGRES_DATABASE
+        fromService:
+          type: pserv
+          name: n8n-database
+          property: database
+      - key: DB_POSTGRES_USER
+        fromService:
+          type: pserv
+          name: n8n-database
+          property: user
+      - key: DB_POSTGRES_PASSWORD
+        fromService:
+          type: pserv
+          name: n8n-database
+          property: password
+      # Add any other environment variables your n8n workflow needs here
+      # For example, API keys for Google Sheets, OpenAI, etc.
+      # - key: GOOGLE_SHEETS_CREDENTIALS_DATA # Example for n8n credentials
+      #   sync: false
+      #   value: "YOUR_N8N_CREDENTIALS_JSON_HERE" # NOT RECOMMENDED FOR SENSITIVE DATA
+      # Instead, manage credentials directly in the n8n UI after deployment.
+      # 或者，您可以在部署後直接在 n8n UI 中管理憑證。
+
+  - type: pserv # PostgreSQL service for n8n database
+    name: n8n-database
+    plan: starter # Or 'standard' for more resources
+    databaseName: n8n_db # Name of the database
+    user: n8n_user # Database user
+    # Render will automatically generate a strong password for the database user
