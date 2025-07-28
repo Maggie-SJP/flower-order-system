@@ -7,7 +7,7 @@ services:
     dockerfilePath: ./docker/Dockerfile # Updated Dockerfile path
     envVars:
       - key: DB_TYPE
-        value: postgres
+        value: postgresdb # Corrected from 'postgres' to 'postgresdb'
       - key: DB_POSTGRESDB_HOST
         value: dpg-d23epn2dbo4c7385a96g-a
       - key: DB_POSTGRESDB_PORT
