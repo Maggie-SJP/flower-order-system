@@ -1,0 +1,895 @@
+{
+  "name": "n8n-flower-order-system-wf",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "output": "raw",
+        "filters": {
+          "custom": "=contains(subject, '[003]')"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -220
+      ],
+      "id": "24f4dda5-1b1b-4cee-8297-1cf9ac4bea45",
+      "name": "Microsoft Outlook Trigger",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "w161iIcLQ3Y5jtkB",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg",
+          "mode": "list",
+          "cachedResultName": "OrderIntegratedSystem_template",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 696468539,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg/edit#gid=696468539"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "[Email] EmailId",
+              "displayName": "[Email] EmailId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[Email] Subject",
+              "displayName": "[Email] Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[Email] From",
+              "displayName": "[Email] From",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[Email] Received Date",
+              "displayName": "[Email] Received Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[AI] Customer Name",
+              "displayName": "[AI] Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[AI] Product Name",
+              "displayName": "[AI] Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[AI]Quantity",
+              "displayName": "[AI]Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[AI]Delivery Date",
+              "displayName": "[AI]Delivery Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Special order",
+              "displayName": "Special order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "[AI]Notes",
+              "displayName": "[AI]Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prompt_tokens",
+              "displayName": "prompt_tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "completion_tokens",
+              "displayName": "completion_tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "total_tokens",
+              "displayName": "total_tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "_debugLog",
+              "displayName": "_debugLog",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3100,
+        -40
+      ],
+      "id": "146de274-afcd-4d79-a28b-d4123976d8e9",
+      "name": "Centralized order system",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "opmgdl9OCZyw37EF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "output": "raw",
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -280,
+        -220
+      ],
+      "id": "50d54bc8-0a91-4afa-85a0-b5c832cd215a",
+      "name": "Get email body",
+      "webhookId": "647291be-d000-4e24-97fc-366e85484fe7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "w161iIcLQ3Y5jtkB",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// This node maps the AI parsing output to the correct Excel headers.\n// It dynamically retrieves headers from a Google Sheet and matches them\n// with AI-parsed data, cleaning up \"[AI]\" or \"[Email]\" tags for comparison.\n// 此節點將 AI 解析輸出映射到正確的 Excel 標頭。\n// 它動態地從 Google Sheet 檢索標頭，並將它們與 AI 解析的數據進行匹配，\n// 清理 \"[AI]\" 或 \"[Email]\" 標籤以進行比較。\n\nconst debugLog = []; // Initialize debug log array // 初始化偵錯日誌陣列\ndebugLog.push(\"--- Starting map-ai-output-to-excel-headers ---\");\n\n// --- Helper Function: Get Nested Property Safely ---\n// Safely retrieves a nested property from an object using a dot-separated path string.\n// If any part of the path is null or undefined, it returns undefined.\n// --- 輔助函數：安全地獲取巢狀屬性 ---\n// 使用點分隔的路徑字串安全地從物件中檢索巢狀屬性。\n// 如果路徑的任何部分為 null 或 undefined，則返回 undefined。\nfunction getNestedProperty(obj, path) {\n    if (!obj || !path) return undefined;\n    const parts = path.split('.');\n    let current = obj;\n    for (const part of parts) {\n        // Special handling for 'emailId' which might be a top-level property or nested\n        // 對於 'emailId' 的特殊處理，它可能是頂層屬性或巢狀屬性\n        if (part === 'emailId' && (current.emailId || current.id)) {\n            return current.emailId || current.id;\n        }\n        if (current === null || typeof current !== 'object' || !current.hasOwnProperty(part)) {\n            return undefined; // Path does not exist or intermediate value is not an object\n        }\n        current = current[part];\n    }\n    return current;\n}\n\n// --- Email/Usage Header to Metadata Path Mapping ---\n// This object maps the cleaned Excel header names (from Google Sheet)\n// to their corresponding paths in the originalEmailMetadata JSON object.\n// This includes Email metadata and AI usage tokens.\n// Note: Keys here should be the *cleaned* version of the Google Sheet headers\n// (i.e., lowercase, no spaces, no special characters except for dot paths).\n// --- 電子郵件/使用量標頭到元數據路徑映射 ---\n// 此物件將清理後的 Excel 標頭名稱（來自 Google Sheet）\n// 映射到 originalEmailMetadata JSON 物件中對應的資料路徑。\n// 這包括電子郵件元數據和 AI 使用量令牌。\n// 注意：此處的鍵應該是 Google Sheet 標頭的*清理後*版本\n// （即，小寫、無空格、無特殊字元，點路徑除外）。\nconst emailHeaderToMetadataPath = {\n    'emailid': 'emailId',         // For \"[Email] EmailId\" or \"[Email] Email Id\"\n    'subject': 'subject',         // Maps to originalEmailMetadata.subject\n    'fromaddress': 'from.emailAddress.address', // For \"[Email] From Address\"\n    'from': 'from.emailAddress.address',         // For \"[Email] From\"\n    'receiveddate': 'receivedDateTime', // For \"[Email] Received Date\"\n    // Mappings for AI usage tokens - using cleaned versions without spaces/underscores\n    'prompttokens': 'usage.prompt_tokens',\n    'completiontokens': 'usage.completion_tokens',\n    'totaltokens': 'usage.total_tokens'\n    // Add more mappings here if you add new [Email] or [Usage] headers in your Google Sheet\n    // 如果您在 Google Sheet 中添加新的 [Email] 或 [Usage] 標頭，請在此處添加更多映射\n};\n\n\n// Get the original email metadata from the input item of this node.\n// This node's input is the output of \"AI Parsing\" node, which passes through original email metadata.\n// 從此節點的輸入項目獲取原始電子郵件元數據。\n// 此節點的輸入是 \"AI Parsing\" 節點的輸出，它會傳遞原始電子郵件元數據。\nconst originalEmailMetadata = items[0].json; \ndebugLog.push(`Original Email Metadata (from input item): ${JSON.stringify(originalEmailMetadata, null, 2)}`);\n\n// Step 1: 取得 AI output\n// Get AI output\nlet contentStr = \"\";\nlet parsed = {};\nlet orders = [];\n\ntry {\n  contentStr = originalEmailMetadata.choices[0].message.content; // Access from originalEmailMetadata // 從 originalEmailMetadata 訪問\n  debugLog.push(`AI Parsing contentStr: ${contentStr.substring(0, 200)}...`); // Log first 200 chars // 記錄前 200 個字元\n  parsed = JSON.parse(contentStr);\n  debugLog.push(`AI Parsing parsed JSON: ${JSON.stringify(parsed, null, 2)}`);\n  orders = parsed.orders || [];\n  debugLog.push(`AI Parsing orders array length: ${orders.length}`);\n} catch (e) {\n  debugLog.push(`ERROR: Failed to get or parse AI Parsing output: ${e.message}`);\n  debugLog.push(`Raw contentStr was: ${contentStr}`);\n  return [{ json: { _debugLog: debugLog, message: \"AI Parsing output error, returning empty.\" } }];\n}\n\nif (orders.length === 0) {\n  debugLog.push(\"WARNING: 'orders' array from AI Parsing is empty. No data to map.\");\n}\n\n\n// Step 2: 取得 headers（來源：Read_header）\n// Get headers (source: Read_header)\n// 修正：直接將 Read_header 的 JSON 輸出視為 headerRow 物件\n// 因為根據日誌，其輸出是單一的 JSON 物件，而不是陣列。\nconst headerRow = $node[\"Read_header\"].json;\ndebugLog.push(`Read_header raw output (headerData): ${JSON.stringify(headerRow, null, 2)}`);\n\n// 檢查 headerRow 是否是有效的物件且包含鍵\nif (typeof headerRow === 'object' && headerRow !== null && Object.keys(headerRow).length > 0) {\n  debugLog.push(`Read_header parsed headerRow: ${JSON.stringify(headerRow, null, 2)}`);\n} else {\n  // 如果沒有讀取到標頭，則記錄警告並返回空輸出，或根據需求處理\n  debugLog.push(\"WARNING: 未從 'Read_header' 節點獲取到有效的標頭數據。\");\n  return [{ json: { _debugLog: debugLog, message: \"No valid header data, returning empty.\" } }]; // 返回空輸出，停止處理\n}\n\nconst headers = Object.keys(headerRow).filter(key => key !== \"row_number\");\ndebugLog.push(`Filtered headers for mapping: ${JSON.stringify(headers)}`);\n\nif (headers.length === 0) {\n  debugLog.push(\"WARNING: No headers found after filtering 'row_number'. No data to map.\");\n}\n\n// Step 3: 將 AI 回傳內容按照 header 填入對應欄位\n// Map AI output to corresponding columns based on headers\nconst output = orders.map(order => {\n  const rowObj = {};\n  debugLog.push(`Processing order: ${JSON.stringify(order)}`);\n\n  headers.forEach(header => {\n    // 原始的 header 來自 Google Sheet，可能包含 \"[Email]\" 或 \"[AI]\"\n    // Original header from Google Sheet, may contain \"[Email]\" or \"[AI]\"\n    const originalHeader = header;\n\n    // 清理 header：移除 \"[Email]\" 或 \"[AI]\" 標籤，移除所有非字母數字字元（除了點），並轉換為小寫。\n    // Clean header: remove \"[Email]\" or \"[AI]\" tags, remove all non-alphanumeric characters (except dot), and convert to lowercase.\n    const cleanedLowerHeader = originalHeader\n      .replace(/\\[Email\\]/g, '') // 移除 [Email]\n      .replace(/\\[AI\\]/g, '')    // 移除 [AI]\n      .replace(/[^a-zA-Z0-9.]/g, '') // 移除所有非字母數字字元，但保留點 (用於巢狀路徑)\n      .toLowerCase()\n      .trim();\n\n    let valueToSet = \"\";\n    \n    // Check if the cleaned header is one of the mapped metadata fields (Email or Token usage)\n    // 檢查清理後的標頭是否是映射的元數據欄位之一（電子郵件或令牌使用量）\n    const metadataPath = emailHeaderToMetadataPath[cleanedLowerHeader];\n\n    if (metadataPath) {\n        // This handles Email ID, Subject, From, Received Date, and all Token fields\n        // 這處理了電子郵件 ID、主題、發件人、接收日期以及所有令牌欄位\n        valueToSet = getNestedProperty(originalEmailMetadata, metadataPath);\n        debugLog.push(`  DEBUG: Mapped header '${originalHeader}' (cleaned: '${cleanedLowerHeader}') to metadata path '${metadataPath}'. Value: '${valueToSet}'`);\n\n        // Special handling for receivedDateTime to format it to YYYY-MM-DD\n        // 對於 receivedDateTime 的特殊處理，將其格式化為 YYYY-MM-DD\n        if (cleanedLowerHeader === 'receiveddate' && valueToSet) { // Use cleanedLowerHeader 'receiveddate'\n            try {\n                valueToSet = new Date(valueToSet).toISOString().slice(0, 10);\n            } catch (e) {\n                debugLog.push(`  WARNING: Could not parse receivedDateTime '${valueToSet}': ${e.message}`);\n                valueToSet = \"\"; // Fallback to empty string on error // 錯誤時回退為空字串\n            }\n        }\n    } else {\n        // This handles AI-parsed fields that come from the 'order' object\n        // (e.g., Customer Name, Product Name, Quantity, Delivery Date, Notes, Special order)\n        // 這處理了來自 'order' 物件的 AI 解析欄位\n        // （例如，客戶名稱、產品名稱、數量、交貨日期、備註、特殊訂單）\n        const matchedKey = Object.keys(order).find(k => k.toLowerCase().trim() === cleanedLowerHeader);\n        valueToSet = matchedKey ? order[matchedKey] : \"\";\n        debugLog.push(`  Mapping AI order field '${originalHeader}' (cleaned: '${cleanedLowerHeader}') to AI key '${matchedKey || \"N/A\"}'. Value: '${valueToSet}'`);\n    }\n    \n    // Ensure valueToSet is not undefined or null before assigning\n    // 確保 valueToSet 在賦值前不是 undefined 或 null\n    rowObj[originalHeader] = valueToSet !== undefined && valueToSet !== null ? valueToSet : \"\";\n    debugLog.push(`  Final assignment for '${originalHeader}': '${rowObj[originalHeader]}'`);\n  });\n  return { json: rowObj };\n});\n\ndebugLog.push(`--- Finished map-ai-output-to-excel-headers ---`);\ndebugLog.push(`Final output items count: ${output.length}`);\n\n// Return the actual output data along with a separate debug log item\n// 返回實際的輸出數據以及一個單獨的偵錯日誌項目\nreturn [...output,/** { json: { _debugLog: debugLog, message: \"Mapping process completed. Check _debugLog for details.\" } } **/\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2860,
+        -40
+      ],
+      "id": "9ffdc234-e6f2-4959-ba0a-da142828286d",
+      "name": "Email format transformer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        -260
+      ],
+      "id": "2b042349-c796-4420-bd05-3b0c5fb8d1ea",
+      "name": "AI Parsing",
+      "credentials": {
+        "openAiApi": {
+          "id": "QeA8sql2vYLAZj7Q",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3e1d0d21-3df1-4af3-aef3-d69fbfa3a724",
+                    "leftValue": "={{$json[\"type\"]}}",
+                    "rightValue": "emailHtml",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "emailHtml"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "da88a11c-eb0a-4e02-bb05-b01c355ce884",
+                    "leftValue": "={{$json[\"type\"]}}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b681190e-95c7-4ced-b254-4e5cfce979af",
+                    "leftValue": "={{$json[\"type\"]}}",
+                    "rightValue": "docx",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "docx"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "09d40faa-125a-4821-9e9f-89beb34fd2aa",
+                    "leftValue": "={{$json[\"type\"]}}",
+                    "rightValue": "unsupported",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unsupported"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        220,
+        -240
+      ],
+      "id": "e1db0cae-14d4-49b0-98c3-6aa18364fcc1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node processes binary attachments from the previous node,\n// extracts image files, converts their data to Base64 strings,\n// and outputs them in a structured JSON format.\n// 此函數節點處理來自前一個節點的二進位附件，\n// 提取圖像檔案，將其數據轉換為 Base64 字串，\n// 並以結構化的 JSON 格式輸出。\n\n// Initialize a global array to store all extracted image data from all input items.\n// 初始化一個全域陣列，用於存儲從所有輸入項目中提取的所有圖像數據。\nconst allExtractedImages = [];\n\n// Initialize an array to pass through all original binary data.\n// 初始化一個陣列，用於傳遞所有原始二進位數據。\nconst allBinaryData = [];\n\n// Array to store debug messages for output.\n// 用於輸出偵錯訊息的陣列。\nconst debugLog = [];\n\n// Iterate over all input items.\n// 迭代所有輸入項目。\nfor (let itemIndex = 0; itemIndex < items.length; itemIndex++) {\n  const currentItem = items[itemIndex];\n  const binary = currentItem.binary || {}; // Get the binary data object for the current item // 獲取當前項目的二進位數據物件。\n\n  debugLog.push(`--- Processing input item ${itemIndex} ---`);\n  debugLog.push(`Current item JSON: ${JSON.stringify(currentItem.json || {}, null, 2)}`);\n  debugLog.push(`Current item binary keys: ${Object.keys(binary).join(', ')}`);\n\n  // Store the original binary data for pass-through.\n  // 存儲原始二進位數據以供傳遞。\n  allBinaryData.push(binary);\n\n  // Get all keys (attachment names) from the current item's binary object.\n  // 從當前項目的二進位物件中獲取所有鍵（附件名稱）。\n  const keys = Object.keys(binary);\n\n  if (keys.length === 0) {\n    debugLog.push(`  No binary data found for item ${itemIndex}.`);\n  }\n\n  // Iterate over each key (attachment) in the current item's binary object.\n  // 迭代當前項目二進位物件中的每個鍵（附件）。\n  for (const key of keys) {\n    const data = binary[key]; // Get the data for the current attachment // 獲取當前附件的數據\n\n    const mime = data.mimeType || \"\"; // Get the MIME type, default to empty string // 獲取 MIME 類型，預設為空字串\n    const isImage = mime.startsWith(\"image/\"); // Check if the MIME type indicates an image // 檢查 MIME 類型是否表示圖像\n\n    debugLog.push(`  Processing binary key: ${key}`);\n    debugLog.push(`    MimeType: ${mime}, IsImage: ${isImage}, HasData: ${!!data.data}`);\n\n    // If it's an image and has data, process it.\n    // 如果是圖像並且有數據，則處理它。\n    if (isImage && data.data) {\n      // Convert the binary Buffer data to a Base64 string.\n      // This is crucial because n8n's binary data is typically a Buffer,\n      // and the AI prompt expects a Base64 string.\n      // 將二進位 Buffer 數據轉換為 Base64 字串。\n      // 這很關鍵，因為 n8n 的二進位數據通常是 Buffer，\n      // 而 AI 提示期望的是 Base64 字串。\n      const base64String = data.data.toString('base64');\n\n      // Push the extracted image information into the allExtractedImages array.\n      // 將提取的圖像信息推送到 allExtractedImages 陣列中。\n      allExtractedImages.push({\n        imageBase64: base64String, // Store the Base64 string // 存儲 Base64 字串\n        mimeType: mime,\n        fileName: data.fileName || \"\",\n        fileSize: data.fileSize || 0\n      });\n      debugLog.push(`    Successfully extracted image: ${data.fileName || key}`);\n    } else {\n      debugLog.push(`    Skipping non-image or empty binary data for key: ${key}`);\n    }\n  }\n  debugLog.push(`--- Finished processing input item ${itemIndex} ---`);\n}\n\ndebugLog.push(`Total images extracted: ${allExtractedImages.length}`);\n\n// Return a single item with all extracted images in its JSON.\n// All original binary data is also passed through if needed by subsequent nodes.\n// 返回一個單一項目，其 JSON 中包含所有提取的圖像。\n// 如果後續節點需要，所有原始二進位數據也會被傳遞。\nreturn [{\n  json: {\n    images: allExtractedImages, // The array of all image objects // 所有圖像物件的陣列\n    _debugLog: debugLog // Include the debug log for inspection // 包含偵錯日誌以供檢查\n  },\n  binary: allBinaryData.length > 0 ? allBinaryData[0] : {} // Pass through the first binary data or an empty object // 傳遞第一個二進位數據或一個空物件\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -240
+      ],
+      "id": "e5befb11-49c4-413a-bfa8-a3e8f7c1ca03",
+      "name": "base64_image"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ========== 從前一節點取得資料 ==========\n// Get data from the previous node (source node)\nconst unified = $node[\"source\"].json || {};\nconst combinedText = unified.combinedText || \"\";\n// outputImages is now an array containing objects with imageBase64 and mimeType\n// outputImages 現在是一個包含 imageBase64 和 mimeType 物件的陣列\nconst outputImages = unified.outputImages || [];\n\n// Read raw prompt text from GitHub URL\n// 從 GitHub URL 讀取原始提示文本\nconst rawPromptText = $node[\"Load_prompt_from_URL\"].json.data;\n// Parse the raw text into a content array template\n// 將原始文本解析為內容陣列模板\nconst contentTemplate = JSON.parse(rawPromptText).content;\n// Get header string from \"Get_header\" node\nconst headerString = $node[\"Get_header\"].json.headerString || \"\";\n\n\n// ========== 插值函數 ==========\n// Interpolation function to replace placeholders in an object\nfunction interpolateObject(obj, variables) {\n  const interpolateString = (str) => {\n    // Replace placeholders like {key} with their corresponding variable values\n    // 將 {key} 這樣的佔位符替換為其對應的變數值\n    return str.replace(/{([^{}]+)}/g, (match, key) => {\n      return key in variables ? variables[key] : match;\n    });\n  };\n\n  const recurse = (value) => {\n    if (typeof value === \"string\") {\n      return interpolateString(value);\n    } else if (Array.isArray(value)) {\n      return value.map(recurse);\n    } else if (typeof value === \"object\" && value !== null) {\n      const result = {};\n      for (const key in value) {\n        result[key] = recurse(value[key]);\n      }\n      return result;\n    }\n    return value;\n  };\n\n  return recurse(obj);\n}\n\n// ========== 執行插值 ==========\n// Execute interpolation on the content template with combinedText and headerString\n// 對內容模板執行插值，使用 combinedText 和 headerString\nconst content = interpolateObject(contentTemplate, {\n  combinedText,\n  headerString\n});\n\n// ========== 加圖片（如有） ==========\n// Add images to the content array if outputImages exist\n// 如果 outputImages 存在，則將圖像添加到內容陣列\nif (outputImages.length > 0) {\n  for (const img of outputImages) {\n    const base64Image = img.imageBase64;\n    const mimeType = img.mimeType;\n\n    const imageUrl = (base64Image && mimeType)\n      ? `data:${mimeType};base64,${base64Image}`\n      : \"\";\n\n    if (imageUrl) {\n      content.push({\n        type: \"image_url\",\n        image_url: { url: imageUrl }\n      });\n    }\n  }\n}\n\n// ========== 回傳給 OpenAI ==========\n// Return the final payload for OpenAI API\nreturn [{\n  json: {\n    model: \"gpt-4o\",\n    messages: [\n      {\n        role: \"user\",\n        content\n      }\n    ],\n    temperature: 0.2\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2220,
+        -260
+      ],
+      "id": "6cc7f6c5-6acb-47a6-953a-2f3649256440",
+      "name": "AI Prompt"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg",
+          "mode": "list",
+          "cachedResultName": "OrderIntegratedSystem_template",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 696468539,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KQRfD2MojubPSljsbNCKKFEnUZP4qFSzYxV2EIeg3wg/edit#gid=696468539"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "1:2"
+            }
+          },
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1420,
+        -420
+      ],
+      "id": "de5df50b-6b60-49ff-bfe2-8b62af4f9c8d",
+      "name": "Read_header",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "opmgdl9OCZyw37EF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://raw.githubusercontent.com/Maggie-SJP/flower-order-system/refs/heads/main/florist_prompt.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        -120
+      ],
+      "id": "57768bd5-a684-4853-bbac-3563beb4979f",
+      "name": "Load_prompt_from_URL"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2020,
+        -260
+      ],
+      "id": "7c9eb997-8d6d-4982-ba4f-2b9943a7be3b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node converts HTML email body to plain text.\n// 此函數節點將 HTML 郵件正文轉換為純文本。\n\n// Iterate over each incoming item.\n// 迭代每個傳入的項目。\nfor (let itemIndex = 0; itemIndex < items.length; itemIndex++) {\n  const currentItem = items[itemIndex];\n  const json = currentItem.json;\n\n  // Ensure this item has a 'body' property, and its 'content' sub-property is not null/undefined.\n  // (Assuming a preceding switch node already filters for \"emailMeta\" type).\n  // 確保此項目具有 'body' 屬性，並且其 'content' 子屬性不為 null/undefined。\n  // (假設前一個 switch 節點已經過濾了 \"emailMeta\" 類型)。\n  if (json && json.body && json.body.content !== null && json.body.content !== undefined) {\n    // Get the original HTML content from 'json.body.content'.\n    // Ensure it's explicitly converted to a string to prevent 'replace is not a function' error.\n    // 從 'json.body.content' 獲取原始 HTML 內容。\n    // 確保它明確地轉換為字串，以防止 'replace is not a function' 錯誤。\n    let rawHtml = String(json.body.content);\n\n    // Clean up HTML tags and formatting.\n    // 清理 HTML 標籤和格式。\n    let combinedText = rawHtml\n      // First, remove script and style tags and their content aggressively.\n      // 首先，積極地移除 script 和 style 標籤及其內容。\n      .replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '')\n      .replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '')\n      // Then, replace specific block-level tags with newlines.\n      // 然後，將特定的塊級標籤替換為換行符。\n      .replace(/<br\\s*\\/?>/gi, '\\n')      // Replace <br> with newline\n      .replace(/<p\\s*>/gi, '\\n')         // Replace <p> with newline\n      .replace(/<\\/p>/gi, '\\n')          // Replace </p> with newline\n      .replace(/<div\\s*>/gi, '\\n')       // Replace <div> with newline\n      .replace(/<\\/div>/gi, '\\n')        // Replace </div> with newline\n      // Remove all other HTML tags.\n      // 移除所有其他 HTML 標籤。\n      .replace(/<[^>]*>/g, '')           // Remove all other HTML tags\n      // Handle common HTML entities.\n      // 處理常見的 HTML 實體。\n      .replace(/&nbsp;/g, ' ')           // Replace non-breaking space entity\n      .replace(/&amp;/g, '&')            // Replace &amp; with &\n      .replace(/&lt;/g, '<')             // Replace &lt; with <\n      .replace(/&gt;/g, '>')             // Replace &gt; with >\n      .replace(/&quot;/g, '\"')           // Replace &quot; with \"\n      .replace(/&#039;/g, \"'\")           // Replace &#039; with ' (single quote)\n      // Clean up multiple newlines and trim leading/trailing whitespace.\n      // 清理多餘的換行符並修剪開頭/結尾的空白。\n      .replace(/\\r?\\n\\s*\\r?\\n/g, '\\n\\n') // Replace multiple newlines with two\n      .trim();                           // Trim leading/trailing whitespace\n\n    // Construct the output item with only 'subject' and 'emailBody'.\n    // 建構輸出項目，只包含 'subject' 和 'emailBody'。\n    return [{\n      json: {\n        subject: json.subject || \"No Subject\", // Get subject, with fallback\n        emailBody: combinedText\n      }\n    }];\n  }\n}\n\n// If no suitable item was found or processed, return an empty array.\n// 如果沒有找到或處理合適的項目，則返回一個空數組。\nreturn [];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -420
+      ],
+      "id": "0c2cb2f9-c7d8-48a0-b533-d93aebb902c2",
+      "name": "Html2txt"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        880,
+        -260
+      ],
+      "id": "30e6abae-17b9-46df-8db3-626750e8c111",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:5010/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "id": "90a60db6-72bf-4731-82bf-177d75fab521",
+      "name": "Docx2txt"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node combines subject, email body, and attachment text\n// into a single 'combinedText' field for AI prompting.\n// It also extracts imageBase64 and mimeType from all image attachments.\n// 此函數節點將主題、郵件正文和附件文本合併到一個單一的 'combinedText' 字段中，用於 AI 提示。\n// 它還從所有圖像附件中提取 imageBase64 和 mimeType。\n\nlet combinedTextParts = []; // Array to store all text parts // 用於存儲所有文本部分的陣列\nlet debugLog = []; // Array to store debug messages for output // 用於輸出偵錯訊息的陣列\n\n// Array to store all image data found (initialized to empty)\n// 用於存儲所有找到的圖像數據的陣列（初始化為空）\nlet outputImages = [];\n\n// Iterate over all incoming items from the Merge node.\n// 迭代來自 Merge 節點的所有傳入項目。\nfor (let itemIndex = 0; itemIndex < items.length; itemIndex++) {\n  const currentItem = items[itemIndex];\n  const json = currentItem.json;\n\n  // DEBUG: Log the full JSON of the current item to understand its structure\n  // 偵錯：記錄當前項目的完整 JSON 以了解其結構\n  debugLog.push(`--- Processing item ${itemIndex} ---`);\n  debugLog.push(`Full JSON for item ${itemIndex}: ${JSON.stringify(json, null, 2)}`);\n\n  if (json) {\n    // Attempt to extract subject if present\n    // 嘗試提取主題（如果存在）\n    if (json.subject !== undefined) {\n      debugLog.push(`  Item ${itemIndex}: 'subject' field found. Value: ${json.subject}`);\n      combinedTextParts.push(`Subject: ${String(json.subject)}`);\n    } else {\n      debugLog.push(`  Item ${itemIndex}: 'subject' field not found or undefined.`);\n    }\n\n    // Attempt to extract emailBody content\n    // 嘗試提取郵件正文內容\n    if (json.emailBody !== undefined) {\n      debugLog.push(`  Item ${itemIndex}: 'emailBody' field found. Type: ${typeof json.emailBody}`);\n      if (typeof json.emailBody === 'object' && json.emailBody.content !== undefined) {\n        // If emailBody is an object with a 'content' property\n        // 如果 emailBody 是一個包含 'content' 屬性的物件\n        debugLog.push(`  Item ${itemIndex}: 'emailBody.content' found. Value: ${json.emailBody.content}`);\n        combinedTextParts.push(`Email Body:\\n${String(json.emailBody.content)}`);\n      } else {\n        // If emailBody is directly the string content\n        // 如果 emailBody 直接是字串內容\n        debugLog.push(`  Item ${itemIndex}: 'emailBody' is direct string content. Value: ${json.emailBody}`);\n        combinedTextParts.push(`Email Body:\\n${String(json.emailBody)}`);\n      }\n    } else {\n      debugLog.push(`  Item ${itemIndex}: 'emailBody' field not found or undefined.`);\n    }\n\n    // Attempt to extract 'text' content (from attachments like Docx2txt)\n    // 嘗試提取 'text' 內容（來自附件，例如 Docx2txt）\n    if (json.text !== undefined) {\n      debugLog.push(`  Item ${itemIndex}: 'text' field found. Value: ${json.text}`);\n      combinedTextParts.push(`Attachment Text:\\n${String(json.text)}`);\n    } else {\n      debugLog.push(`  Item ${itemIndex}: 'text' field not found or undefined.`);\n    }\n\n    // Attempt to extract image data if present in the 'images' array\n    // This loop now processes ALL images in the 'images' array\n    // 嘗試提取圖像數據（如果存在於 'images' 陣列中）\n    // 此循環現在處理 'images' 陣列中的所有圖像\n    if (json.images !== undefined && Array.isArray(json.images) && json.images.length > 0) {\n      debugLog.push(`  Item ${itemIndex}: 'images' array found with ${json.images.length} image(s).`);\n      for (const image of json.images) {\n        if (image.imageBase64 !== undefined && image.mimeType !== undefined) {\n          debugLog.push(`    Found image: ${image.fileName || 'unknown'} (${image.mimeType})`);\n          outputImages.push({\n            imageBase64: String(image.imageBase64),\n            mimeType: String(image.mimeType)\n          });\n        } else {\n          debugLog.push(`    Image in array missing imageBase64 or mimeType.`);\n        }\n      }\n    } else {\n      debugLog.push(`  Item ${itemIndex}: 'images' field not found, not an array, or empty.`);\n    }\n\n    // DEBUG: Log if an item didn't contribute any text or image parts\n    // 偵錯：記錄如果一個項目沒有貢獻任何文本或圖像部分\n    if (json.subject === undefined && json.emailBody === undefined && json.text === undefined &&\n        (json.images === undefined || !Array.isArray(json.images) || json.images.length === 0)) {\n      debugLog.push(`  Item ${itemIndex} did not contain expected 'subject', 'emailBody', 'text', or 'images' fields for extraction.`);\n      debugLog.push(`  JSON keys for item ${itemIndex}: ${Object.keys(json).join(', ')}`);\n    }\n  } else {\n    debugLog.push(`  Item ${itemIndex} has no JSON data.`);\n  }\n  debugLog.push(`--- End of item ${itemIndex} processing ---`);\n}\n\n// Combine all collected text parts into a single string.\n// 將所有收集到的文本部分合併為一個單一字串。\nconst combinedText = combinedTextParts.join(\"\\n\\n---\\n\\n\"); // Use a separator for clarity\n\n// Construct the final output item with 'combinedText', image data, and the debug log.\n// 建構最終輸出項目，只包含 'combinedText'、圖像數據和偵錯日誌。\nreturn [{\n  json: {\n    combinedText: combinedText, // Include the combined text // 包含合併後的文本\n    outputImages: outputImages, // Include the array of extracted image data // 包含提取的圖像數據陣列\n    _debugLog: debugLog // Include the debug log for inspection in Test mode // 在測試模式下包含偵錯日誌以供檢查\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        -260
+      ],
+      "id": "08bb4297-d50d-4edf-b401-a40c6ea9c8f1",
+      "name": "source"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node renames the binary attachment key to a generic 'file'\n// which might be expected by the Docx2txt node.\n// It also includes debug logs in the output for easier troubleshooting.\n// 此函數節點將二進位附件鍵重新命名為通用的 'file'，\n// 這可能是 Docx2txt 節點所期望的。\n// 它還在輸出中包含偵錯日誌，以便於故障排除。\n\nconst outputItems = [];\nconst debugLog = [];\n\ndebugLog.push(\"--- Starting Rename Binary Attachment Function ---\");\ndebugLog.push(`Total input items: ${items.length}`);\n\nfor (const item of items) {\n  const newBinary = {};\n  const originalBinary = item.binary || {};\n  const json = item.json || {}; // For logging purposes // 用於日誌記錄\n\n  debugLog.push(`\\n--- Processing item (JSON partial): ${JSON.stringify({ type: json.type, originalFileName: json.originalFileName }, null, 2)} ---`);\n  debugLog.push(`Original binary keys: ${Object.keys(originalBinary).join(', ')}`);\n\n  // Get the first (and likely only) binary key from the current item.\n  // We assume there's only one main binary attachment per item at this stage.\n  // 獲取當前項目的第一個（也可能是唯一一個）二進位鍵。\n  // 我們假設在此階段每個項目只有一個主要二進位附件。\n  const originalBinaryKey = Object.keys(originalBinary)[0];\n\n  if (originalBinaryKey) {\n    // If a binary key exists, rename it to 'file'.\n    // This creates a new binary object with a standardized key.\n    // 如果二進位鍵存在，則將其重新命名為 'file'。\n    // 這會創建一個具有標準化鍵的新二進位物件。\n    newBinary.file = originalBinary[originalBinaryKey];\n    outputItems.push({\n      json: item.json,\n      binary: newBinary // Attach the new binary object // 附加新的二進位物件\n    });\n    debugLog.push(`  Renamed '${originalBinaryKey}' to 'file'. Item KEPT.`);\n  } else {\n    // If no binary data found for this item (should be rare after filtering),\n    // pass the item through without binary data, or discard if strictly needed.\n    // For now, we pass it through to avoid breaking the flow.\n    // 如果此項目沒有找到二進位數據（過濾後應該很少見），\n    // 則不帶二進位數據傳遞項目，或者如果嚴格需要則丟棄。\n    // 目前，我們將其傳遞以避免中斷流程。\n    outputItems.push({\n      json: item.json,\n      binary: {} // Ensure binary is an empty object if no file // 如果沒有檔案，確保二進位是一個空物件\n    });\n    debugLog.push(`  No binary data found for this item. Item PASSED THROUGH without binary.`);\n  }\n}\n\ndebugLog.push(`--- Finished Rename Binary Attachment Function ---`);\ndebugLog.push(`Total items processed: ${items.length}, Total items output: ${outputItems.length}`);\n\n// Attach the debug log to the first output item (if any)\n// 將偵錯日誌附加到第一個輸出項目（如果有的話）\nif (outputItems.length > 0) {\n  outputItems[0].json._renameBinaryDebugLog = debugLog;\n} else {\n  // If no items were output, create a dummy item to carry the debug log\n  // 如果沒有輸出任何項目，則創建一個虛擬項目來攜帶偵錯日誌\n  outputItems.push({\n    json: {\n      _renameBinaryDebugLog: debugLog,\n      message: \"No items were processed or outputted with binary data.\"\n    }\n  });\n}\n\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "5e7e01a2-81d3-4938-8f3f-175d01f6c08f",
+      "name": "renameDoc"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node processes incoming items (assumed to be email data)\n// to extract email metadata (subject, body) and binary attachment data.\n// It assumes the previous node (e.g., \"Get email body\") has provided\n// email details in 'json' and downloaded attachments in 'binary'.\n\n// Initialize an array to collect all output items.\n// Each incoming email will generate at least one output item (for email metadata),\n// plus one output item for each attached file.\nlet outputItems = [];\n\n// Iterate over each incoming item (each item typically represents an email).\nfor (let itemIndex = 0; itemIndex < items.length; itemIndex++) {\n  const currentItem = items[itemIndex];\n  const emailJson = currentItem.json; // The main JSON data for the email\n\n  // --- 1. Process Email Metadata ---\n  // Create an output item specifically for the email's metadata.\n  if (emailJson) {\n    outputItems.push({\n      json: {\n        type: \"emailHtml\", // Custom type to identify this as email emailHtml\n        subject: emailJson.subject || \"No Subject\", // Extract email subject\n        body: emailJson.body || \"\", // Extract full email body (changed from bodyPreview)\n        // You can add more email metadata here if available in currentItem.json,\n        // e.g., from: emailJson.from, to: emailJson.to, conversationId: emailJson.conversationId\n      }\n    });\n  }\n\n  // --- 2. Process Attachments ---\n  // Check if the 'binary' property exists on the current item.\n  // This is where downloaded files are typically stored.\n  if (currentItem.binary) {\n    // Iterate over each binary property. In this case, we expect 'attachment_0', 'attachment_1', etc.\n    // The keys in 'currentItem.binary' correspond to the attachment names.\n    for (const attachmentKey in currentItem.binary) {\n      // Ensure the property belongs to the object itself and is not from the prototype chain.\n      if (Object.prototype.hasOwnProperty.call(currentItem.binary, attachmentKey)) {\n        const binaryData = currentItem.binary[attachmentKey];\n\n        // Access properties of the binary data, such as its mimeType, fileName, etc.\n        const fileName = binaryData.fileName || `attachment_${attachmentKey}`; // Fallback filename\n        const mimeType = binaryData.mimeType || 'application/octet-stream'; // Fallback mime type\n\n        // Determine the 'type' for the attachment based on mimeType\n        let attachmentType = 'unsupported'; // Default to 'unsupported'\n        let isImage = false;\n\n        if (mimeType.startsWith('image/')) {\n          attachmentType = 'image';\n          isImage = true;\n        } else if (mimeType === 'application/msword' || mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {\n          attachmentType = 'docx'; // Covers both old .doc and new .docx\n        }\n        // All other mime types will fall through to 'unsupported' as per your request.\n\n        // Prepare the JSON metadata for the current attachment\n        let attachmentJson = {\n          type: attachmentType, // Set the type (e.g., \"image\", \"docx\", \"unsupported\")\n          originalFileName: fileName,\n          mimeType: mimeType,\n          isImage: isImage, // Boolean flag for easy checking if it's an image\n          // You could also add the size if available in binaryData, e.g., fileSize: binaryData.fileSize\n        };\n\n        // Create an output item with both JSON metadata and binary data for this attachment\n        outputItems.push({\n          json: attachmentJson,\n          binary: {\n            // Assign the extracted binary data to a new key in the output binary object.\n            // It's good practice to give it a descriptive name based on the original key.\n            [`${attachmentKey}_binary`]: binaryData\n          }\n        });\n      }\n    }\n  } else {\n    // If no binary data is found for a particular item, log a warning.\n    // The email metadata will still be outputted.\n    console.warn(`Item at index ${itemIndex} has no binary data for attachments.`);\n  }\n}\n\n// Return all collected output items.\n// For an email with 2 attachments, this will return 3 items:\n// 1. Email metadata (type: \"emailMeta\")\n// 2. Attachment 1 (type: \"image\", \"docx\", or \"unsupported\")\n// 3. Attachment 2 (type: \"image\", \"docx\", or \"unsupported\")\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        -220
+      ],
+      "id": "08c814f2-08a6-458c-b073-81bb07df1ae8",
+      "name": "EmailContent"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2660,
+        -40
+      ],
+      "id": "db21ae19-7394-4e8c-b18a-883cc34fcd43",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node processes an incoming JSON item (e.g., from a Google Sheets node)\n// to extract specific header names, remove the \"[AI]\" prefix, and output them as a\n// comma-separated string. This is useful for dynamically generating prompts for AI models.\n// 此函數節點處理傳入的 JSON 項目 (例如來自 Google Sheets 節點)，\n// 以提取特定的標頭名稱，移除 \"[AI]\" 前綴，並將它們輸出為逗點分隔的字串。\n// 這對於為 AI 模型動態生成提示非常有用。\n\nconst outputItems = [];\n\n// We expect the input to be a single item containing the data as JSON.\n// 我們期望輸入是一個包含 JSON 數據的單一項目。\nif (items.length > 0 && items[0].json) {\n  const inputJson = items[0].json; // Get the JSON data from the first item // 從第一個項目獲取 JSON 數據\n\n  // Get all keys (column names) from the input JSON.\n  // 從輸入 JSON 中獲取所有鍵 (欄位名稱)。\n  const allKeys = Object.keys(inputJson);\n\n  // Filter keys:\n  // 1. Exclude 'row_number'.\n  // 2. Include only keys that contain the string '[AI]'.\n  // 過濾鍵：\n  // 1. 排除 'row_number'。\n  // 2. 只包含包含字串 '[AI]' 的鍵。\n  const aiRelevantKeys = allKeys.filter(key => \n    key !== 'row_number' && key.includes('[AI]')\n  );\n\n  // Clean the identified AI-relevant keys: remove the \"[AI]\" prefix and any leading/trailing spaces.\n  // 清理已識別的 AI 相關鍵：移除 \"[AI]\" 前綴以及任何前導/尾隨空格。\n  const cleanedAiHeaders = aiRelevantKeys.map(key => \n    key.replace('[AI]', '').trim() // Remove '[AI]' and trim whitespace // 移除 '[AI]' 並修剪空白\n  );\n\n  // Join the cleaned headers into a single comma-separated string.\n  // 將清理後的標頭連接成一個單一的逗點分隔字串。\n  const headerStringForAI = cleanedAiHeaders.join(', ');\n\n  // Output the result as a JSON object.\n  // 將結果輸出為 JSON 物件。\n  outputItems.push({\n    json: {\n      headerString: headerStringForAI\n    }\n  });\n\n} else {\n  outputItems.push({\n    json: {\n      ai_header_string: \"\"\n    }\n  });\n}\n\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        -420
+      ],
+      "id": "11043dbf-9add-4e71-a19f-b05f304076ac",
+      "name": "Get_header"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function node extracts essential email metadata (ID, from, subject)\n// from the raw email JSON data provided by a preceding node (e.g., \"Get email body\" or Email Trigger).\n// It outputs this metadata as a single JSON item, intended for separate processing paths\n// like logging or de-duplication checks, independent of AI content analysis.\n// 此函數節點從前一個節點 (例如 \"Get email body\" 或 Email Trigger) 提供的原始電子郵件 JSON 資料中\n// 提取重要的電子郵件元數據 (ID、發件人、主題)。\n// 它將此元數據作為單一 JSON 項目輸出，用於獨立的處理路徑，\n// 例如日誌記錄或去重檢查，與 AI 內容分析無關。\n\nlet outputItems = [];\n\n// Iterate over each incoming item. We expect each item to represent an email.\n// 迭代每個傳入的項目。我們期望每個項目代表一封電子郵件。\nfor (let itemIndex = 0; itemIndex < items.length; itemIndex++) {\n  const currentItem = items[itemIndex];\n  const emailJson = currentItem.json; // The main JSON data for the email // 電子郵件的主要 JSON 資料\n\n  // Ensure emailJson exists before processing.\n  // 在處理之前確保 emailJson 存在。\n  if (emailJson) {\n    // Extract a unique ID for the email. Prioritize 'id', then 'messageId'.\n    // 提取電子郵件的唯一 ID。優先使用 'id'，然後是 'messageId'。\n    const emailUniqueId = emailJson.id || emailJson.messageId || \"\";\n\n    // Extract sender information. The 'from' field typically contains the sender's name and address.\n    // 提取發件人資訊。'from' 欄位通常包含發件人的姓名和地址。\n    const senderInfo = emailJson.from || \"\";\n\n    // Extract the email subject.\n    // 提取電子郵件主題。\n    const emailSubject = emailJson.subject || \"No Subject\";\n    \n    const emailReceivedDateTime = emailJson.receivedDateTime || \"\";\n\n    // Create an output item containing only the desired metadata.\n    // 創建一個只包含所需元數據的輸出項目。\n    outputItems.push({\n      json: {\n        type: \"emailMetaField\", // A specific type to identify this output // 用於識別此輸出的特定類型\n        emailId: emailUniqueId,\n        from: senderInfo,\n        receivedDateTime: emailReceivedDateTime,\n        subject: emailSubject,\n        // You can add other top-level metadata fields here if needed,\n        // e.g., receivedDateTime: emailJson.receivedDateTime, conversationId: emailJson.conversationId\n      }\n    });\n  } else {\n    // Log a warning if an item has no JSON data, which indicates an unexpected input.\n    // 如果項目沒有 JSON 數據，則記錄警告，這表示輸入不符合預期。\n    console.warn(`Item at index ${itemIndex} has no JSON data for metadata extraction. Skipping.`);\n  }\n}\n\n// Return all collected output items.\n// 返回所有收集到的輸出項目。\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        260
+      ],
+      "id": "6cf75e41-32d7-4560-bb81-afb234692a91",
+      "name": "Email_MetaField"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get email body": {
+      "main": [
+        [
+          {
+            "node": "EmailContent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email_MetaField",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email format transformer": {
+      "main": [
+        [
+          {
+            "node": "Centralized order system",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Parsing": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Html2txt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "base64_image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "renameDoc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "base64_image": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Parsing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read_header": {
+      "main": [
+        [
+          {
+            "node": "Get_header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load_prompt_from_URL": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Html2txt": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Docx2txt": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "source": {
+      "main": [
+        [
+          {
+            "node": "Load_prompt_from_URL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read_header",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "renameDoc": {
+      "main": [
+        [
+          {
+            "node": "Docx2txt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EmailContent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Email format transformer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_header": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Outlook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get email body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email_MetaField": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "740bb9bc-9297-41f8-ac4c-f78e9dc0e9fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "49dd3b1bd634dcd7576316759738d37ac6ad367578a913c19e8b37e56fac2a16"
+  },
+  "id": "qxXEt7LSyNSSufyc",
+  "tags": []
+}
