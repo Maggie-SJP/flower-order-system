@@ -20,4 +20,4 @@ EXPOSE 5678
 # Use the full path to n8n executable
 # This will start n8n and automatically import the workflow on startup.
 # Workflows and credentials will be managed via the UI and database.
-CMD ["/usr/local/bin/n8n", "start", "--workflow=/files/n8n_flower_order_system_wf.json"]
+CMD ["n8n", "start", "--workflow=/files/n8n_flower_order_system_wf.json"]
