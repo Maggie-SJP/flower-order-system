@@ -9,7 +9,7 @@ COPY n8n_flower_order_system_wf.json /files/n8n_flower_order_system_wf.json
 COPY docker/entrypoint.sh /data/entrypoint.sh
 
 # ✅ 在 Dockerfile 中修改權限（這樣在 Render 通常不會被擋）
-RUN chmod +x /data/entrypoint.sh
+#RUN chmod +x /data/entrypoint.sh
 
 # ✅ 改成使用 sh 執行（避免需要執行權限）
 CMD ["sh", "/data/entrypoint.sh"]
