@@ -6,9 +6,8 @@ FROM n8nio/n8n:latest
 COPY n8n_flower_order_system_wf.json /files/n8n_flower_order_system_wf.json
 
 # 複製並設定 entrypoint.sh 的執行權限到 /usr/local/bin/
-# 這是解決 'Operation not permitted' 錯誤的常見做法
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# 使用 --chmod=+x 在複製時直接設定執行權限，這是解決 'Operation not permitted' 錯誤的可靠做法
+COPY --chmod=+x docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # 暴露 n8n 運行的端口
 EXPOSE 5678
