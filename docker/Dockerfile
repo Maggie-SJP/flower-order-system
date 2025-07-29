@@ -1,9 +1,6 @@
 # 使用官方 n8n 映像
 FROM n8nio/n8n:latest
 
-# 設定工作目錄，這有助於確保 n8n 命令在 PATH 中被找到
-WORKDIR /usr/local/bin/n8n
-
 # 複製 workflow 檔案
 # Render 的建置上下文通常是儲存庫根目錄，所以直接引用檔案名稱
 COPY n8n_flower_order_system_wf.json /files/n8n_flower_order_system_wf.json
