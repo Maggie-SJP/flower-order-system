@@ -15,32 +15,36 @@
       <div class="card start-card">
         <p class="eyebrow">Accession Log &middot; Animalia</p>
         <h1>Specimen Drawer</h1>
-        <p class="lede">A two-naturalist identification match. Ten specimens, four choices each &mdash; answer fast and answer right to out-identify your opponent.</p>
+        <p class="lede">A live group identification game. One host runs the drawer &mdash; any number of naturalists can join from their own device and race to identify all 10 specimens.</p>
         <div class="field-count">
-          <div><b>2</b>Naturalists</div>
+          <div><b>&infin;</b>Naturalists</div>
           <div><b>10</b>Specimens</div>
           <div><b>20s</b>Per specimen</div>
         </div>
         <div class="button-stack">
-          <button id="btn-host" class="btn">Host a Match</button>
-          <button id="btn-join" class="btn btn-join">Join a Match</button>
+          <button id="btn-host" class="btn">Host a Game</button>
+          <button id="btn-join" class="btn btn-join">Join a Game</button>
         </div>
       </div>
     </section>
 
     <!-- HOST LOBBY -->
-    <section id="s-host" class="screen">
+    <section id="s-host-lobby" class="screen">
       <div class="card start-card">
         <p class="eyebrow">Host Lobby</p>
-        <p class="field-label">Your name</p>
-        <input type="text" id="host-name" class="text-input" placeholder="Naturalist name" value="" maxlength="16" />
-        <p class="field-label">Match code</p>
+        <p class="field-label">Game code</p>
         <div class="code-display" id="code-disp">------</div>
-        <p class="lobby-hint">Share this code with your opponent so they can join.</p>
+        <p class="lobby-hint">Share this code &mdash; naturalists join at this same page and enter it to take a seat at the drawer.</p>
         <div class="lobby-status" id="host-status">Connecting&hellip;</div>
         <div class="lobby-error" id="host-err"></div>
+
+        <p class="summary-eyebrow" style="margin-top:22px">Joined Naturalists (<span id="roster-count">0</span>)</p>
+        <div class="roster-list" id="roster-list">
+          <p class="roster-empty">No one has joined yet.</p>
+        </div>
+
         <div class="button-stack">
-          <button id="start-btn" class="btn" style="display:none">Begin the Match</button>
+          <button id="start-btn" class="btn" disabled>Start Game</button>
           <button class="btn btn-ghost" data-goto="s-home">&larr; Back</button>
         </div>
       </div>
@@ -52,10 +56,10 @@
         <p class="eyebrow">Join Lobby</p>
         <p class="field-label">Your name</p>
         <input type="text" id="guest-name" class="text-input" placeholder="Naturalist name" value="" maxlength="16" />
-        <p class="field-label">Match code</p>
+        <p class="field-label">Game code</p>
         <input type="text" id="code-input" class="text-input code-entry" placeholder="e.g. AB3XQZ" maxlength="6" />
         <div class="button-stack">
-          <button id="join-btn" class="btn btn-join">Join Match</button>
+          <button id="join-btn" class="btn btn-join">Join Game</button>
         </div>
         <div class="lobby-status" id="join-status"></div>
         <div class="lobby-error" id="join-err"></div>
@@ -63,8 +67,18 @@
       </div>
     </section>
 
-    <!-- GAME -->
-    <section id="s-game" class="screen">
+    <!-- PLAYER: WAITING FOR HOST TO START -->
+    <section id="s-player-wait" class="screen">
+      <div class="card start-card">
+        <p class="eyebrow">Lobby</p>
+        <h1 id="wait-name-h1" style="font-size:1.8rem">You're in!</h1>
+        <p class="lede">Waiting for the host to start the game&hellip; keep this page open.</p>
+        <div class="lobby-status" id="player-wait-status">Connected</div>
+      </div>
+    </section>
+
+    <!-- PLAYER: GAME -->
+    <section id="s-player-game" class="screen">
       <div class="quiz-header">
         <span id="specimen-label">Specimen 01 / 10</span>
         <span id="timer-label">20s</span>
@@ -76,16 +90,9 @@
         <div class="light-track"><div id="light-fill" class="light-fill"></div></div>
       </div>
 
-      <div class="scores-bar">
-        <div class="score-block">
-          <div class="score-name" id="sc-name1">You</div>
-          <div class="score-pts" id="sc-pts1">0</div>
-        </div>
-        <div class="score-vs">VS</div>
-        <div class="score-block">
-          <div class="score-name" id="sc-name2">Opponent</div>
-          <div class="score-pts" id="sc-pts2">0</div>
-        </div>
+      <div class="score-solo">
+        <span class="label">Your Score</span>
+        <span class="value" id="my-score">0</span>
       </div>
 
       <div class="card question-card">
@@ -106,16 +113,59 @@
         <p id="result-correct-answer" class="feedback-answer">Correct identification: <b></b></p>
         <p id="result-fact" class="feedback-fact"></p>
         <div id="result-points" class="feedback-points"></div>
-        <div id="wait-msg" class="wait-msg" style="display:none">Waiting for your opponent to answer&hellip;</div>
+        <div id="wait-msg" class="wait-msg">Waiting for the host to continue&hellip;</div>
       </div>
     </section>
 
-    <!-- WINNER -->
-    <section id="s-winner" class="screen">
+    <!-- HOST: DASHBOARD -->
+    <section id="s-host-dashboard" class="screen">
+      <div class="quiz-header">
+        <span id="host-specimen-label">Specimen 01 / 10</span>
+        <span id="host-timer-label">20s</span>
+      </div>
+      <div class="rail"><div id="host-rail-fill" class="rail-fill"></div></div>
+
+      <div class="light-row">
+        <span class="light-label">Light</span>
+        <div class="light-track"><div id="host-light-fill" class="light-fill"></div></div>
+      </div>
+
+      <div class="card question-card">
+        <p class="eyebrow">Field Note</p>
+        <h2 id="host-question-text">Question text</h2>
+      </div>
+
+      <p class="lobby-status" id="host-answered-count" style="margin:0 0 10px">0 / 0 answered</p>
+
+      <div class="card" id="host-tally-card">
+        <div id="host-tally" class="tally-list"></div>
+      </div>
+
+      <div class="button-stack">
+        <button id="host-next-btn" class="btn">Next Specimen</button>
+      </div>
+    </section>
+
+    <!-- HOST: FINAL LEADERBOARD -->
+    <section id="s-host-final" class="screen">
       <div class="card results-card">
-        <p class="eyebrow">Match Complete</p>
-        <div id="winner-stamp" class="stamp large">Winner</div>
-        <div class="final-scores" id="final-scores"></div>
+        <p class="eyebrow">Game Complete</p>
+        <div id="host-final-stamp" class="stamp large">Results</div>
+        <div class="leaderboard-list" id="leaderboard-list"></div>
+        <button class="btn" data-goto="s-home">New Game</button>
+      </div>
+    </section>
+
+    <!-- PLAYER: FINAL RESULTS -->
+    <section id="s-player-final" class="screen">
+      <div class="card results-card">
+        <p class="eyebrow">Collection Complete</p>
+        <p id="player-rank" class="results-rank">Rank</p>
+        <div class="results-score-number" id="player-final-score">0</div>
+        <div class="results-score-label">Total Points</div>
+        <p id="player-correct-summary" class="results-correct">You identified 0 / 10 specimens correctly</p>
+        <p class="eyebrow summary-eyebrow">Field Log</p>
+        <div id="player-summary" class="summary-list"></div>
         <button class="btn" data-goto="s-home">Play Again</button>
       </div>
     </section>

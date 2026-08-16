@@ -89,17 +89,13 @@ const MAXP = 1000;
 const MINP = 200;
 const PEER_PREFIX = "specimendrawer-";
 
-// ---- state ----
-let peer = null, conn = null;
-let isHost = false, myName = "", opName = "";
-let qi = 0, myTotal = 0, opTotal = 0;
-let answered = false, opAnswered = false;
-let timerInterval = null;
-
 function $(id) { return document.getElementById(id); }
 
 function showScreen(id) {
-  ["s-home", "s-host", "s-join", "s-game", "s-winner"].forEach((s) => {
+  [
+    "s-home", "s-host-lobby", "s-join", "s-player-wait", "s-player-game",
+    "s-host-dashboard", "s-host-final", "s-player-final",
+  ].forEach((s) => {
     const el = $(s);
     if (!el) return;
     el.classList.toggle("active", s === id);
@@ -113,80 +109,224 @@ function genCode() {
   return s;
 }
 
+function calcPts(ms) {
+  return Math.round(MINP + (MAXP - MINP) * Math.max(0, 1 - ms / TL));
+}
+
+// ============================================================
+// Shared state
+// ============================================================
+let peer = null;
+let isHost = false;
+let qi = 0;
+let timerInterval = null;
+
+// ============================================================
+// HOST state & logic
+// ============================================================
+let players = new Map(); // peerId -> { conn, name, score, correctCount, answers: [], connected }
+let questionAnsweredIds = new Set();
+let questionTally = [0, 0, 0, 0];
+
 function goHome() {
   if (timerInterval) clearInterval(timerInterval);
-  if (conn) { try { conn.close(); } catch (e) {} }
   if (peer) { try { peer.destroy(); } catch (e) {} }
-  peer = null; conn = null;
-  isHost = false; myName = ""; opName = "";
-  qi = 0; myTotal = 0; opTotal = 0;
-  answered = false; opAnswered = false;
+  peer = null;
+  isHost = false;
+  qi = 0;
+  players = new Map();
+  questionAnsweredIds = new Set();
+  questionTally = [0, 0, 0, 0];
+  myScore = 0; myAnswers = []; myConn = null; myName = ""; answered = false;
   showScreen("s-home");
 }
 
-// ---- HOST ----
 function goHost() {
-  showScreen("s-host");
+  isHost = true;
+  showScreen("s-host-lobby");
   const code = genCode();
   $("code-disp").textContent = code;
   $("host-err").textContent = "";
   $("host-status").textContent = "Connecting to server…";
-  $("start-btn").style.display = "none";
+  $("start-btn").disabled = true;
+  renderRoster();
 
   peer = new Peer(PEER_PREFIX + code);
   peer.on("open", () => {
-    $("host-status").textContent = "Ready. Waiting for an opponent to join…";
+    $("host-status").textContent = "Ready. Share the code above — naturalists can join now.";
+    $("start-btn").disabled = false;
   });
-  peer.on("connection", (c) => {
-    conn = c;
-    wireHost();
-  });
+  peer.on("connection", (conn) => wireNewPlayer(conn));
   peer.on("error", (e) => {
     $("host-err").textContent = "Connection error (" + e.type + "). Try again.";
   });
 }
 
-function wireHost() {
-  conn.on("open", () => {
-    conn.send({ type: "hello" });
-  });
+function wireNewPlayer(conn) {
+  const id = conn.peer;
+  players.set(id, { conn, name: "", score: 0, correctCount: 0, connected: true });
+
+  conn.on("open", () => conn.send({ type: "hello" }));
+
   conn.on("data", (d) => {
+    const p = players.get(id);
+    if (!p) return;
     if (d.type === "name") {
-      opName = d.name;
-      $("host-status").textContent = opName + " has joined. Press Begin the Match!";
-      $("start-btn").style.display = "block";
+      p.name = d.name;
+      renderRoster();
     }
     if (d.type === "ans") {
-      opAnswered = true;
-      const correct = d.a === QUESTIONS[qi].correct;
-      const pts = correct ? calcPts(d.ms) : 0;
-      if (correct) opTotal += pts;
-      $("sc-pts2").textContent = opTotal;
-      checkBoth();
+      recordAnswer(id, d.a, d.ms);
     }
   });
+
   conn.on("close", () => {
-    $("host-err").textContent = "Your opponent disconnected.";
+    const p = players.get(id);
+    if (p) p.connected = false;
+    renderRoster();
   });
 }
 
-function startMatch() {
-  myName = $("host-name").value.trim() || "Host";
-  isHost = true; qi = 0; myTotal = 0; opTotal = 0;
-  conn.send({ type: "start", hostName: myName, guestName: opName });
-  initGameUI();
-  setTimeout(() => nextQuestion(), 400);
+function renderRoster() {
+  const names = Array.from(players.values()).filter((p) => p.name);
+  $("roster-count").textContent = names.length;
+  const list = $("roster-list");
+  if (names.length === 0) {
+    list.innerHTML = '<p class="roster-empty">No one has joined yet.</p>';
+    return;
+  }
+  list.innerHTML = names
+    .map((p) => `<div class="roster-row"><span class="roster-dot"></span>${p.name}${p.connected ? "" : " (left)"}</div>`)
+    .join("");
 }
 
-// ---- GUEST ----
+function broadcast(msg) {
+  players.forEach((p) => {
+    if (p.conn && p.conn.open) p.conn.send(msg);
+  });
+}
+
+function startGame() {
+  qi = -1;
+  broadcast({ type: "start" });
+  showScreen("s-host-dashboard");
+  $("host-next-btn").textContent = "Next Specimen";
+  hostNextQuestion();
+}
+
+function hostNextQuestion() {
+  qi++;
+  if (qi >= QUESTIONS.length) {
+    endGame();
+    return;
+  }
+  questionAnsweredIds = new Set();
+  questionTally = [0, 0, 0, 0];
+
+  const q = QUESTIONS[qi];
+  const dl = Date.now() + TL + 300;
+  broadcast({ type: "question", qi, deadline: dl });
+
+  $("host-specimen-label").textContent = `Specimen ${String(qi + 1).padStart(2, "0")} / ${QUESTIONS.length}`;
+  $("host-rail-fill").style.width = `${(qi / QUESTIONS.length) * 100}%`;
+  $("host-question-text").textContent = q.question;
+  $("host-next-btn").textContent = qi === QUESTIONS.length - 1 ? "See Results" : "Next Specimen";
+  renderHostTally();
+  updateAnsweredCount();
+
+  if (timerInterval) clearInterval(timerInterval);
+  function tick() {
+    const rem = Math.max(0, dl - Date.now());
+    $("host-light-fill").style.width = `${(rem / TL) * 100}%`;
+    $("host-light-fill").style.backgroundColor = rem <= 5000 ? "var(--wrong)" : "";
+    $("host-timer-label").textContent = `${Math.ceil(rem / 1000)}s`;
+    if (rem <= 0) clearInterval(timerInterval);
+  }
+  tick();
+  timerInterval = setInterval(tick, 100);
+}
+
+function recordAnswer(playerId, aIdx, ms) {
+  if (questionAnsweredIds.has(playerId)) return;
+  questionAnsweredIds.add(playerId);
+
+  const p = players.get(playerId);
+  if (!p) return;
+  const q = QUESTIONS[qi];
+  const correct = aIdx >= 0 && aIdx === q.correct;
+  const pts = correct ? calcPts(ms) : 0;
+  p.score += pts;
+  if (correct) p.correctCount += 1;
+  if (aIdx >= 0) questionTally[aIdx] += 1;
+
+  renderHostTally();
+  updateAnsweredCount();
+}
+
+function updateAnsweredCount() {
+  const total = Array.from(players.values()).filter((p) => p.connected).length;
+  $("host-answered-count").textContent = `${questionAnsweredIds.size} / ${total} answered`;
+}
+
+function renderHostTally() {
+  const q = QUESTIONS[qi];
+  const max = Math.max(1, ...questionTally);
+  $("host-tally").innerHTML = questionTally
+    .map((count, i) => `
+      <div class="tally-row">
+        <span class="tag-num tag-${i}">${["I", "II", "III", "IV"][i]}</span>
+        <div class="tally-track"><div class="tally-fill" style="width:${(count / max) * 100}%; --tag-color: var(${["--brass", "--teal", "--moss", "--plum"][i]})"></div></div>
+        <span class="tally-count">${count}</span>
+      </div>
+    `)
+    .join("");
+}
+
+function endGame() {
+  if (timerInterval) clearInterval(timerInterval);
+  const leaderboard = Array.from(players.entries())
+    .filter(([, p]) => p.name)
+    .map(([id, p]) => ({ id, name: p.name, score: p.score, correct: p.correctCount }))
+    .sort((a, b) => b.score - a.score);
+
+  broadcast({ type: "over", leaderboard });
+  renderHostLeaderboard(leaderboard);
+  showScreen("s-host-final");
+}
+
+function renderHostLeaderboard(leaderboard) {
+  $("host-final-stamp").textContent = leaderboard.length ? `Winner: ${leaderboard[0].name}` : "No Players";
+  $("leaderboard-list").innerHTML = leaderboard
+    .map((row, i) => `
+      <div class="leaderboard-row ${i === 0 ? "top" : ""}">
+        <span class="leaderboard-rank">${i + 1}</span>
+        <span class="leaderboard-name">${row.name}</span>
+        <span class="leaderboard-stats"><b>${row.score}</b> pts &middot; ${row.correct}/${QUESTIONS.length} &middot; ${Math.round((row.correct / QUESTIONS.length) * 100)}%</span>
+      </div>
+    `)
+    .join("");
+}
+
+// ============================================================
+// PLAYER (guest) state & logic
+// ============================================================
+let myConn = null;
+let myName = "";
+let myScore = 0;
+let myAnswers = [];
+let answered = false;
+
 function doJoin() {
   const name = $("guest-name").value.trim() || "Guest";
   const code = $("code-input").value.trim().toUpperCase();
   if (code.length !== 6) {
-    $("join-err").textContent = "Please enter the 6-character match code.";
+    $("join-err").textContent = "Please enter the 6-character game code.";
     return;
   }
-  myName = name; isHost = false;
+  isHost = false;
+  myName = name;
+  myScore = 0;
+  myAnswers = [];
   $("join-status").textContent = "Connecting…";
   $("join-err").textContent = "";
   $("join-btn").disabled = true;
@@ -194,7 +334,7 @@ function doJoin() {
   peer = new Peer();
   peer.on("open", () => {
     $("join-status").textContent = "Finding host…";
-    conn = peer.connect(PEER_PREFIX + code, { reliable: true });
+    myConn = peer.connect(PEER_PREFIX + code, { reliable: true });
     wireGuest();
   });
   peer.on("error", () => {
@@ -204,73 +344,44 @@ function doJoin() {
 }
 
 function wireGuest() {
-  conn.on("open", () => {
-    $("join-status").textContent = "Connected. Waiting for the host to begin…";
+  myConn.on("open", () => {
+    $("wait-name-h1").textContent = `You're in, ${myName}!`;
+    showScreen("s-player-wait");
   });
-  conn.on("data", (d) => {
+  myConn.on("data", (d) => {
     if (d.type === "hello") {
-      conn.send({ type: "name", name: myName });
+      myConn.send({ type: "name", name: myName });
     }
     if (d.type === "start") {
-      opName = d.hostName;
-      qi = 0; myTotal = 0; opTotal = 0;
-      initGameUI();
+      $("player-wait-status").textContent = "The game is starting…";
     }
     if (d.type === "question") {
       qi = d.qi;
-      answered = false; opAnswered = false;
-      showQuestion(d.qi, d.deadline);
-    }
-    if (d.type === "opAns") {
-      opAnswered = true;
-      const correct = d.a === QUESTIONS[qi].correct;
-      const pts = correct ? calcPts(d.ms) : 0;
-      if (correct) opTotal += pts;
-      $("sc-pts2").textContent = opTotal;
-      checkBoth();
+      answered = false;
+      showPlayerQuestion(d.qi, d.deadline);
     }
     if (d.type === "over") {
-      showWinner(d.hTotal, d.gTotal, d.hName, d.gName);
+      showPlayerFinal(d.leaderboard);
     }
   });
-  conn.on("close", () => {
+  myConn.on("close", () => {
     $("join-err").textContent = "The host disconnected.";
   });
 }
 
-// ---- GAME ----
-function calcPts(ms) {
-  return Math.round(MINP + (MAXP - MINP) * Math.max(0, 1 - ms / TL));
-}
-
-function initGameUI() {
-  showScreen("s-game");
-  $("sc-name1").textContent = myName;
-  $("sc-name2").textContent = opName;
-  $("sc-pts1").textContent = "0";
-  $("sc-pts2").textContent = "0";
-  $("result-panel").classList.remove("visible");
-}
-
-function nextQuestion() {
-  answered = false; opAnswered = false;
-  $("result-panel").classList.remove("visible");
-  const dl = Date.now() + TL + 300;
-  conn.send({ type: "question", qi: qi, deadline: dl });
-  showQuestion(qi, dl);
-}
-
-function showQuestion(idx, dl) {
+function showPlayerQuestion(idx, dl) {
   if (timerInterval) clearInterval(timerInterval);
   answered = false;
+  showScreen("s-player-game");
   $("result-panel").classList.remove("visible");
 
   const q = QUESTIONS[idx];
   $("specimen-label").textContent = `Specimen ${String(idx + 1).padStart(2, "0")} / ${QUESTIONS.length}`;
   $("rail-fill").style.width = `${(idx / QUESTIONS.length) * 100}%`;
   $("question-text").textContent = q.question;
+  $("my-score").textContent = myScore;
 
-  const answerBtns = Array.from(document.querySelectorAll(".answer-btn"));
+  const answerBtns = Array.from(document.querySelectorAll("#answers-grid .answer-btn"));
   answerBtns.forEach((btn, i) => {
     btn.querySelector(".answer-text").textContent = q.choices[i];
     btn.classList.remove("correct", "wrong", "dim");
@@ -280,10 +391,9 @@ function showQuestion(idx, dl) {
 
   function tick() {
     const rem = Math.max(0, dl - Date.now());
-    const pct = (rem / TL) * 100;
-    $("light-fill").style.width = pct + "%";
+    $("light-fill").style.width = `${(rem / TL) * 100}%`;
     $("light-fill").style.backgroundColor = rem <= 5000 ? "var(--wrong)" : "";
-    $("timer-label").textContent = Math.ceil(rem / 1000) + "s";
+    $("timer-label").textContent = `${Math.ceil(rem / 1000)}s`;
     if (rem <= 0 && !answered) {
       clearInterval(timerInterval);
       submitAnswer(-1, dl);
@@ -304,7 +414,7 @@ function submitAnswer(aIdx, dl) {
   const correct = aIdx >= 0 && aIdx === q.correct;
   const pts = correct ? calcPts(ms) : 0;
 
-  const answerBtns = Array.from(document.querySelectorAll(".answer-btn"));
+  const answerBtns = Array.from(document.querySelectorAll("#answers-grid .answer-btn"));
   answerBtns.forEach((btn, i) => {
     btn.disabled = true;
     if (i === q.correct) btn.classList.add("correct");
@@ -312,8 +422,15 @@ function submitAnswer(aIdx, dl) {
     else btn.classList.add("dim");
   });
 
-  if (correct) myTotal += pts;
-  $("sc-pts1").textContent = myTotal;
+  if (correct) myScore += pts;
+  $("my-score").textContent = myScore;
+
+  myAnswers.push({
+    icon: q.icon,
+    species: q.choices[q.correct],
+    guess: aIdx < 0 ? "No answer" : q.choices[aIdx],
+    isCorrect: correct,
+  });
 
   const panel = $("result-panel");
   panel.classList.add("visible");
@@ -324,65 +441,55 @@ function submitAnswer(aIdx, dl) {
   $("result-correct-answer").querySelector("b").textContent = q.choices[q.correct];
   $("result-fact").textContent = q.fact;
   $("result-points").textContent = pts > 0 ? `+${pts} points` : "+0 points";
-  $("wait-msg").style.display = opAnswered ? "none" : "block";
 
-  if (isHost) {
-    conn.send({ type: "opAns", a: aIdx, ms });
-  } else {
-    conn.send({ type: "ans", a: aIdx, ms });
-  }
-
-  checkBoth();
+  if (myConn && myConn.open) myConn.send({ type: "ans", a: aIdx, ms });
 }
 
-function checkBoth() {
-  if (!answered || !opAnswered) return;
-  $("wait-msg").style.display = "none";
+function showPlayerFinal(leaderboard) {
+  if (timerInterval) clearInterval(timerInterval);
+  showScreen("s-player-final");
 
-  if (isHost) {
-    setTimeout(() => {
-      qi++;
-      if (qi >= QUESTIONS.length) {
-        conn.send({ type: "over", hTotal: myTotal, gTotal: opTotal, hName: myName, gName: opName });
-        showWinner(myTotal, opTotal, myName, opName);
-      } else {
-        nextQuestion();
-      }
-    }, 3500);
-  }
-}
+  const myId = peer ? peer.id : null;
+  const idx = leaderboard.findIndex((row) => row.id === myId);
+  const total = leaderboard.length;
+  $("player-rank").textContent = idx >= 0 ? `${ordinal(idx + 1)} of ${total} Naturalists` : "Results";
+  $("player-final-score").textContent = myScore;
 
-function showWinner(hPts, gPts, hName, gName) {
-  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-  showScreen("s-winner");
+  const correctCount = myAnswers.filter((a) => a.isCorrect).length;
+  $("player-correct-summary").textContent = `You identified ${correctCount} / ${QUESTIONS.length} specimens correctly`;
 
-  const stamp = $("winner-stamp");
-  let text;
-  if (hPts > gPts) text = `${hName} Wins`;
-  else if (gPts > hPts) text = `${gName} Wins`;
-  else text = "It's a Tie";
-  stamp.textContent = text;
-
-  const iAmHostRow = { name: hName, pts: hPts, mine: isHost };
-  const otherRow = { name: gName, pts: gPts, mine: !isHost };
-  const rows = [iAmHostRow, otherRow];
-  const topScore = Math.max(hPts, gPts);
-
-  $("final-scores").innerHTML = rows
-    .map((r) => `
-      <div class="final-row ${r.pts === topScore ? "winner" : ""}">
-        <span class="final-name">${r.name}${r.mine ? " (You)" : ""}</span>
-        <span class="final-pts">${r.pts} pts</span>
-      </div>
-    `)
+  $("player-summary").innerHTML = myAnswers
+    .map((a, i) => {
+      const statusClass = a.isCorrect ? "correct" : "wrong";
+      const guessLine = a.isCorrect ? "" : `<div class="summary-guess">You guessed: ${a.guess}</div>`;
+      return `
+        <div class="summary-row ${statusClass}">
+          <div class="summary-plate">${a.icon}</div>
+          <div class="summary-text">
+            <div class="summary-species">${i + 1}. ${a.species}</div>
+            ${guessLine}
+          </div>
+          <div class="summary-status ${statusClass}">${a.isCorrect ? "Identified" : "Missed"}</div>
+        </div>
+      `;
+    })
     .join("");
 }
 
-// ---- wiring ----
+function ordinal(n) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+// ============================================================
+// Wiring
+// ============================================================
 $("btn-host").addEventListener("click", goHost);
 $("btn-join").addEventListener("click", () => showScreen("s-join"));
-$("start-btn").addEventListener("click", startMatch);
+$("start-btn").addEventListener("click", startGame);
 $("join-btn").addEventListener("click", doJoin);
+$("host-next-btn").addEventListener("click", hostNextQuestion);
 $("code-input").addEventListener("input", (e) => {
   e.target.value = e.target.value.toUpperCase();
 });

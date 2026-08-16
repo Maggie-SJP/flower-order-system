@@ -282,7 +282,72 @@ body {
   min-height: 1.2em;
 }
 
-/* ---------- Battle score bar ---------- */
+/* ---------- Roster (host lobby) ---------- */
+.roster-list {
+  text-align: left;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  margin: 10px 0 6px;
+  padding: 10px 2px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.roster-empty {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 6px 0;
+}
+
+.roster-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.roster-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--correct);
+}
+
+/* ---------- Solo score readout (player, group game) ---------- */
+.score-solo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.score-solo .label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.score-solo .value {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Battle score bar (legacy 1v1) ---------- */
 .scores-bar {
   display: flex;
   align-items: center;
@@ -326,6 +391,99 @@ body {
   letter-spacing: 0.06em;
   color: var(--brass-deep);
   padding: 0 14px;
+}
+
+/* ---------- Host live tally ---------- */
+.tally-list {
+  text-align: left;
+}
+
+.tally-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tally-row:last-child { margin-bottom: 0; }
+
+.tally-track {
+  flex: 1;
+  height: 12px;
+  background: var(--card-shade);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tally-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: var(--tag-color, var(--brass));
+  transition: width 0.3s ease;
+}
+
+.tally-count {
+  flex: none;
+  width: 2.6em;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Leaderboard (host final) ---------- */
+.leaderboard-list {
+  text-align: left;
+  margin: 20px 0 30px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--brass);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.leaderboard-row.top { border-left-color: var(--correct); }
+
+.leaderboard-rank {
+  flex: none;
+  width: 2em;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--brass-deep);
+}
+
+.leaderboard-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-stats {
+  flex: none;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.leaderboard-stats b {
+  color: var(--ink);
+  font-size: 0.95rem;
 }
 
 /* ---------- Result panel (inline, battle mode) ---------- */
