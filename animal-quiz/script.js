@@ -174,6 +174,7 @@ function wireNewPlayer(conn) {
     if (d.type === "name") {
       p.name = d.name;
       renderRoster();
+      if (qi >= 0) updateAnsweredCount(); // joined mid-game: refresh the live "answered" total
     }
     if (d.type === "ans") {
       recordAnswer(id, d.a, d.ms);
@@ -184,6 +185,7 @@ function wireNewPlayer(conn) {
     const p = players.get(id);
     if (p) p.connected = false;
     renderRoster();
+    if (qi >= 0) updateAnsweredCount();
   });
 }
 
@@ -490,6 +492,7 @@ $("btn-join").addEventListener("click", () => showScreen("s-join"));
 $("start-btn").addEventListener("click", startGame);
 $("join-btn").addEventListener("click", doJoin);
 $("host-next-btn").addEventListener("click", hostNextQuestion);
+$("host-finish-btn").addEventListener("click", endGame);
 $("code-input").addEventListener("input", (e) => {
   e.target.value = e.target.value.toUpperCase();
 });
