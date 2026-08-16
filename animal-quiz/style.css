@@ -319,6 +319,48 @@ body {
   background: var(--correct);
 }
 
+.roster-row.progress-row { gap: 12px; }
+
+.progress-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress-count {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-score {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  min-width: 4.5em;
+  text-align: right;
+}
+
+.progress-badge {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--correct-deep);
+  background: rgba(63, 125, 79, 0.14);
+  border-radius: 3px;
+  padding: 3px 6px;
+}
+
 /* ---------- Solo score readout (player, group game) ---------- */
 .score-solo {
   display: flex;
