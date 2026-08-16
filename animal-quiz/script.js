@@ -88,7 +88,7 @@ const TIME_LIMIT = 15;
 const MAX_POINTS = 1000;
 const MIN_POINTS = 300;
 
-const state = { index: 0, score: 0, correctCount: 0, timer: null, timeLeft: TIME_LIMIT, locked: false };
+const state = { index: 0, score: 0, correctCount: 0, timer: null, timeLeft: TIME_LIMIT, locked: false, answers: [] };
 
 const screens = {
   start: document.getElementById("start-screen"),
@@ -117,6 +117,7 @@ const el = {
   resultsRank: document.getElementById("results-rank"),
   finalScore: document.getElementById("final-score"),
   resultsCorrect: document.getElementById("results-correct"),
+  resultsSummary: document.getElementById("results-summary"),
 };
 
 function showScreen(name) {
@@ -130,6 +131,7 @@ function startQuiz() {
   state.index = 0;
   state.score = 0;
   state.correctCount = 0;
+  state.answers = [];
   showScreen("quiz");
   loadQuestion();
 }
@@ -198,6 +200,13 @@ function handleAnswer(selectedIndex) {
     state.correctCount += 1;
   }
 
+  state.answers.push({
+    icon: q.icon,
+    species: q.choices[q.correct],
+    guess: selectedIndex === null ? "No answer" : q.choices[selectedIndex],
+    isCorrect,
+  });
+
   setTimeout(() => showFeedback(isCorrect, pointsEarned, q), 900);
 }
 
@@ -236,6 +245,26 @@ function showResults() {
   el.resultsRank.textContent = getRank(state.correctCount);
   el.finalScore.textContent = pad(state.score, 4);
   el.resultsCorrect.textContent = `You identified ${state.correctCount} / ${QUESTIONS.length} specimens correctly`;
+
+  el.resultsSummary.innerHTML = state.answers
+    .map((a, i) => {
+      const statusClass = a.isCorrect ? "correct" : "wrong";
+      const guessLine = a.isCorrect
+        ? ""
+        : `<div class="summary-guess">You guessed: ${a.guess}</div>`;
+      return `
+        <div class="summary-row ${statusClass}">
+          <div class="summary-plate">${a.icon}</div>
+          <div class="summary-text">
+            <div class="summary-species">${i + 1}. ${a.species}</div>
+            ${guessLine}
+          </div>
+          <div class="summary-status ${statusClass}">${a.isCorrect ? "Identified" : "Missed"}</div>
+        </div>
+      `;
+    })
+    .join("");
+
   showScreen("results");
 }
 

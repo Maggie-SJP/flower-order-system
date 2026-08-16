@@ -429,6 +429,82 @@ body {
   margin-bottom: 30px;
 }
 
+.summary-eyebrow {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.summary-list {
+  text-align: left;
+  border-top: 1px solid var(--hairline);
+  margin: 0 0 30px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 6px 10px 14px;
+  border-left: 3px solid var(--correct);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.summary-row.wrong {
+  border-left-color: var(--wrong);
+}
+
+.summary-plate {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card-shade);
+  border: 1.5px solid var(--brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-plate svg {
+  width: 24px;
+  height: 24px;
+  color: var(--ink);
+}
+
+.summary-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-species {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.summary-guess {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--wrong-deep);
+  margin-top: 2px;
+}
+
+.summary-status {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.summary-status.correct { color: var(--correct-deep); }
+.summary-status.wrong { color: var(--wrong-deep); }
+
 @media (max-width: 540px) {
   .card { padding: 30px 22px; }
   .answers-grid { grid-template-columns: 1fr; }
