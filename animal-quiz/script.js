@@ -107,7 +107,6 @@ const el = {
   lightFill: document.getElementById("light-fill"),
   lightReadout: document.getElementById("light-readout"),
   questionText: document.getElementById("question-text"),
-  questionIcon: document.getElementById("question-icon"),
   answerBtns: Array.from(document.querySelectorAll(".answer-btn")),
   feedbackCard: document.getElementById("feedback-card"),
   feedbackIcon: document.getElementById("feedback-icon"),
@@ -141,7 +140,6 @@ function loadQuestion() {
 
   const q = QUESTIONS[state.index];
   el.questionText.textContent = q.question;
-  el.questionIcon.innerHTML = q.icon;
   el.questionCount.textContent = `Specimen ${pad(state.index + 1, 2)} / ${QUESTIONS.length}`;
   el.scoreDisplay.textContent = `Score ${pad(state.score, 4)}`;
   el.railFill.style.width = `${(state.index / QUESTIONS.length) * 100}%`;

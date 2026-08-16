@@ -101,8 +101,8 @@ body {
 }
 
 .specimen-plate {
-  width: 78px;
-  height: 78px;
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
   background: var(--card-shade);
   border: 2px solid var(--brass);
@@ -114,20 +114,9 @@ body {
 }
 
 .specimen-plate svg {
-  width: 46px;
-  height: 46px;
+  width: 54px;
+  height: 54px;
   color: var(--ink);
-}
-
-.specimen-plate.small {
-  width: 58px;
-  height: 58px;
-  margin: 0 auto 14px;
-}
-
-.specimen-plate.small svg {
-  width: 34px;
-  height: 34px;
 }
 
 /* ---------- Start screen ---------- */
