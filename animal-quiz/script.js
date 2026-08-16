@@ -84,193 +84,314 @@ const QUESTIONS = [
   },
 ];
 
-const TIME_LIMIT = 15;
-const MAX_POINTS = 1000;
-const MIN_POINTS = 300;
+const TL = 20000; // ms per specimen
+const MAXP = 1000;
+const MINP = 200;
+const PEER_PREFIX = "specimendrawer-";
 
-const state = { index: 0, score: 0, correctCount: 0, timer: null, timeLeft: TIME_LIMIT, locked: false, answers: [] };
+// ---- state ----
+let peer = null, conn = null;
+let isHost = false, myName = "", opName = "";
+let qi = 0, myTotal = 0, opTotal = 0;
+let answered = false, opAnswered = false;
+let timerInterval = null;
 
-const screens = {
-  start: document.getElementById("start-screen"),
-  quiz: document.getElementById("quiz-screen"),
-  feedback: document.getElementById("feedback-screen"),
-  results: document.getElementById("results-screen"),
-};
+function $(id) { return document.getElementById(id); }
 
-const el = {
-  startBtn: document.getElementById("start-btn"),
-  nextBtn: document.getElementById("next-btn"),
-  restartBtn: document.getElementById("restart-btn"),
-  railFill: document.getElementById("rail-fill"),
-  questionCount: document.getElementById("question-count"),
-  scoreDisplay: document.getElementById("score-display"),
-  lightFill: document.getElementById("light-fill"),
-  lightReadout: document.getElementById("light-readout"),
-  questionText: document.getElementById("question-text"),
-  answerBtns: Array.from(document.querySelectorAll(".answer-btn")),
-  feedbackCard: document.getElementById("feedback-card"),
-  feedbackIcon: document.getElementById("feedback-icon"),
-  feedbackStamp: document.getElementById("feedback-stamp"),
-  feedbackCorrectAnswer: document.getElementById("feedback-correct-answer").querySelector("b"),
-  feedbackFact: document.getElementById("feedback-fact"),
-  feedbackPoints: document.getElementById("feedback-points"),
-  resultsRank: document.getElementById("results-rank"),
-  finalScore: document.getElementById("final-score"),
-  resultsCorrect: document.getElementById("results-correct"),
-  resultsSummary: document.getElementById("results-summary"),
-};
-
-function showScreen(name) {
-  Object.values(screens).forEach((s) => s.classList.remove("active"));
-  screens[name].classList.add("active");
-}
-
-function pad(n, len) { return String(n).padStart(len, "0"); }
-
-function startQuiz() {
-  state.index = 0;
-  state.score = 0;
-  state.correctCount = 0;
-  state.answers = [];
-  showScreen("quiz");
-  loadQuestion();
-}
-
-function loadQuestion() {
-  state.locked = false;
-  state.timeLeft = TIME_LIMIT;
-
-  const q = QUESTIONS[state.index];
-  el.questionText.textContent = q.question;
-  el.questionCount.textContent = `Specimen ${pad(state.index + 1, 2)} / ${QUESTIONS.length}`;
-  el.scoreDisplay.textContent = `Score ${pad(state.score, 4)}`;
-  el.railFill.style.width = `${(state.index / QUESTIONS.length) * 100}%`;
-
-  el.answerBtns.forEach((btn, i) => {
-    btn.querySelector(".answer-text").textContent = q.choices[i];
-    btn.classList.remove("correct", "wrong", "dim");
-    btn.disabled = false;
+function showScreen(id) {
+  ["s-home", "s-host", "s-join", "s-game", "s-winner"].forEach((s) => {
+    const el = $(s);
+    if (!el) return;
+    el.classList.toggle("active", s === id);
   });
-
-  el.lightFill.style.transition = "none";
-  el.lightFill.style.width = "100%";
-  el.lightFill.style.backgroundColor = "";
-  void el.lightFill.offsetWidth;
-  el.lightFill.style.transition = "width 1s linear, background-color 0.4s ease";
-  el.lightReadout.textContent = `${state.timeLeft}s`;
-
-  clearInterval(state.timer);
-  state.timer = setInterval(tick, 1000);
 }
 
-function tick() {
-  state.timeLeft -= 1;
-  const pct = Math.max(0, (state.timeLeft / TIME_LIMIT) * 100);
-  el.lightFill.style.width = `${pct}%`;
-  el.lightReadout.textContent = `${Math.max(0, state.timeLeft)}s`;
-  if (state.timeLeft <= 5) {
-    el.lightFill.style.backgroundColor = "var(--wrong)";
-  }
-  if (state.timeLeft <= 0) {
-    clearInterval(state.timer);
-    if (!state.locked) handleAnswer(null);
-  }
+function genCode() {
+  const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 6; i++) s += c[Math.floor(Math.random() * c.length)];
+  return s;
 }
 
-function handleAnswer(selectedIndex) {
-  if (state.locked) return;
-  state.locked = true;
-  clearInterval(state.timer);
+function goHome() {
+  if (timerInterval) clearInterval(timerInterval);
+  if (conn) { try { conn.close(); } catch (e) {} }
+  if (peer) { try { peer.destroy(); } catch (e) {} }
+  peer = null; conn = null;
+  isHost = false; myName = ""; opName = "";
+  qi = 0; myTotal = 0; opTotal = 0;
+  answered = false; opAnswered = false;
+  showScreen("s-home");
+}
 
-  const q = QUESTIONS[state.index];
-  const isCorrect = selectedIndex === q.correct;
-  let pointsEarned = 0;
+// ---- HOST ----
+function goHost() {
+  showScreen("s-host");
+  const code = genCode();
+  $("code-disp").textContent = code;
+  $("host-err").textContent = "";
+  $("host-status").textContent = "Connecting to server…";
+  $("start-btn").style.display = "none";
 
-  el.answerBtns.forEach((btn, i) => {
-    btn.disabled = true;
-    if (i === q.correct) btn.classList.add("correct");
-    else if (i === selectedIndex) btn.classList.add("wrong");
-    else btn.classList.add("dim");
+  peer = new Peer(PEER_PREFIX + code);
+  peer.on("open", () => {
+    $("host-status").textContent = "Ready. Waiting for an opponent to join…";
   });
-
-  if (isCorrect) {
-    const speedRatio = Math.max(0, state.timeLeft) / TIME_LIMIT;
-    pointsEarned = Math.round(MIN_POINTS + (MAX_POINTS - MIN_POINTS) * speedRatio);
-    state.score += pointsEarned;
-    state.correctCount += 1;
-  }
-
-  state.answers.push({
-    icon: q.icon,
-    species: q.choices[q.correct],
-    guess: selectedIndex === null ? "No answer" : q.choices[selectedIndex],
-    isCorrect,
+  peer.on("connection", (c) => {
+    conn = c;
+    wireHost();
   });
-
-  setTimeout(() => showFeedback(isCorrect, pointsEarned, q), 900);
+  peer.on("error", (e) => {
+    $("host-err").textContent = "Connection error (" + e.type + "). Try again.";
+  });
 }
 
-function showFeedback(isCorrect, pointsEarned, q) {
-  el.feedbackCard.classList.remove("is-correct", "is-wrong");
-  el.feedbackCard.classList.add(isCorrect ? "is-correct" : "is-wrong");
-  el.feedbackStamp.textContent = isCorrect ? "Identified" : "Misidentified";
-  el.feedbackIcon.innerHTML = q.icon;
-  el.feedbackCorrectAnswer.textContent = q.choices[q.correct];
-  el.feedbackFact.textContent = q.fact;
-  el.feedbackPoints.textContent = isCorrect ? `+${pointsEarned} points` : "+0 points";
-  el.scoreDisplay.textContent = `Score ${pad(state.score, 4)}`;
-  showScreen("feedback");
+function wireHost() {
+  conn.on("open", () => {
+    conn.send({ type: "hello" });
+  });
+  conn.on("data", (d) => {
+    if (d.type === "name") {
+      opName = d.name;
+      $("host-status").textContent = opName + " has joined. Press Begin the Match!";
+      $("start-btn").style.display = "block";
+    }
+    if (d.type === "ans") {
+      opAnswered = true;
+      const correct = d.a === QUESTIONS[qi].correct;
+      const pts = correct ? calcPts(d.ms) : 0;
+      if (correct) opTotal += pts;
+      $("sc-pts2").textContent = opTotal;
+      checkBoth();
+    }
+  });
+  conn.on("close", () => {
+    $("host-err").textContent = "Your opponent disconnected.";
+  });
+}
+
+function startMatch() {
+  myName = $("host-name").value.trim() || "Host";
+  isHost = true; qi = 0; myTotal = 0; opTotal = 0;
+  conn.send({ type: "start", hostName: myName, guestName: opName });
+  initGameUI();
+  setTimeout(() => nextQuestion(), 400);
+}
+
+// ---- GUEST ----
+function doJoin() {
+  const name = $("guest-name").value.trim() || "Guest";
+  const code = $("code-input").value.trim().toUpperCase();
+  if (code.length !== 6) {
+    $("join-err").textContent = "Please enter the 6-character match code.";
+    return;
+  }
+  myName = name; isHost = false;
+  $("join-status").textContent = "Connecting…";
+  $("join-err").textContent = "";
+  $("join-btn").disabled = true;
+
+  peer = new Peer();
+  peer.on("open", () => {
+    $("join-status").textContent = "Finding host…";
+    conn = peer.connect(PEER_PREFIX + code, { reliable: true });
+    wireGuest();
+  });
+  peer.on("error", () => {
+    $("join-err").textContent = "Couldn't connect. Check the code and try again.";
+    $("join-btn").disabled = false;
+  });
+}
+
+function wireGuest() {
+  conn.on("open", () => {
+    $("join-status").textContent = "Connected. Waiting for the host to begin…";
+  });
+  conn.on("data", (d) => {
+    if (d.type === "hello") {
+      conn.send({ type: "name", name: myName });
+    }
+    if (d.type === "start") {
+      opName = d.hostName;
+      qi = 0; myTotal = 0; opTotal = 0;
+      initGameUI();
+    }
+    if (d.type === "question") {
+      qi = d.qi;
+      answered = false; opAnswered = false;
+      showQuestion(d.qi, d.deadline);
+    }
+    if (d.type === "opAns") {
+      opAnswered = true;
+      const correct = d.a === QUESTIONS[qi].correct;
+      const pts = correct ? calcPts(d.ms) : 0;
+      if (correct) opTotal += pts;
+      $("sc-pts2").textContent = opTotal;
+      checkBoth();
+    }
+    if (d.type === "over") {
+      showWinner(d.hTotal, d.gTotal, d.hName, d.gName);
+    }
+  });
+  conn.on("close", () => {
+    $("join-err").textContent = "The host disconnected.";
+  });
+}
+
+// ---- GAME ----
+function calcPts(ms) {
+  return Math.round(MINP + (MAXP - MINP) * Math.max(0, 1 - ms / TL));
+}
+
+function initGameUI() {
+  showScreen("s-game");
+  $("sc-name1").textContent = myName;
+  $("sc-name2").textContent = opName;
+  $("sc-pts1").textContent = "0";
+  $("sc-pts2").textContent = "0";
+  $("result-panel").classList.remove("visible");
 }
 
 function nextQuestion() {
-  state.index += 1;
-  if (state.index >= QUESTIONS.length) {
-    showResults();
+  answered = false; opAnswered = false;
+  $("result-panel").classList.remove("visible");
+  const dl = Date.now() + TL + 300;
+  conn.send({ type: "question", qi: qi, deadline: dl });
+  showQuestion(qi, dl);
+}
+
+function showQuestion(idx, dl) {
+  if (timerInterval) clearInterval(timerInterval);
+  answered = false;
+  $("result-panel").classList.remove("visible");
+
+  const q = QUESTIONS[idx];
+  $("specimen-label").textContent = `Specimen ${String(idx + 1).padStart(2, "0")} / ${QUESTIONS.length}`;
+  $("rail-fill").style.width = `${(idx / QUESTIONS.length) * 100}%`;
+  $("question-text").textContent = q.question;
+
+  const answerBtns = Array.from(document.querySelectorAll(".answer-btn"));
+  answerBtns.forEach((btn, i) => {
+    btn.querySelector(".answer-text").textContent = q.choices[i];
+    btn.classList.remove("correct", "wrong", "dim");
+    btn.disabled = false;
+    btn.onclick = () => submitAnswer(i, dl);
+  });
+
+  function tick() {
+    const rem = Math.max(0, dl - Date.now());
+    const pct = (rem / TL) * 100;
+    $("light-fill").style.width = pct + "%";
+    $("light-fill").style.backgroundColor = rem <= 5000 ? "var(--wrong)" : "";
+    $("timer-label").textContent = Math.ceil(rem / 1000) + "s";
+    if (rem <= 0 && !answered) {
+      clearInterval(timerInterval);
+      submitAnswer(-1, dl);
+    }
+  }
+  tick();
+  timerInterval = setInterval(tick, 100);
+}
+
+function submitAnswer(aIdx, dl) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const elapsed = Date.now() - (dl - TL);
+  const ms = Math.min(TL, Math.max(0, elapsed));
+  const q = QUESTIONS[qi];
+  const correct = aIdx >= 0 && aIdx === q.correct;
+  const pts = correct ? calcPts(ms) : 0;
+
+  const answerBtns = Array.from(document.querySelectorAll(".answer-btn"));
+  answerBtns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add("correct");
+    else if (i === aIdx) btn.classList.add("wrong");
+    else btn.classList.add("dim");
+  });
+
+  if (correct) myTotal += pts;
+  $("sc-pts1").textContent = myTotal;
+
+  const panel = $("result-panel");
+  panel.classList.add("visible");
+  panel.classList.remove("is-correct", "is-wrong");
+  panel.classList.add(correct ? "is-correct" : "is-wrong");
+  $("result-stamp").textContent = aIdx < 0 ? "Time's Up" : (correct ? "Identified" : "Misidentified");
+  $("result-icon").innerHTML = q.icon;
+  $("result-correct-answer").querySelector("b").textContent = q.choices[q.correct];
+  $("result-fact").textContent = q.fact;
+  $("result-points").textContent = pts > 0 ? `+${pts} points` : "+0 points";
+  $("wait-msg").style.display = opAnswered ? "none" : "block";
+
+  if (isHost) {
+    conn.send({ type: "opAns", a: aIdx, ms });
   } else {
-    showScreen("quiz");
-    loadQuestion();
+    conn.send({ type: "ans", a: aIdx, ms });
+  }
+
+  checkBoth();
+}
+
+function checkBoth() {
+  if (!answered || !opAnswered) return;
+  $("wait-msg").style.display = "none";
+
+  if (isHost) {
+    setTimeout(() => {
+      qi++;
+      if (qi >= QUESTIONS.length) {
+        conn.send({ type: "over", hTotal: myTotal, gTotal: opTotal, hName: myName, gName: opName });
+        showWinner(myTotal, opTotal, myName, opName);
+      } else {
+        nextQuestion();
+      }
+    }, 3500);
   }
 }
 
-function getRank(correctCount) {
-  if (correctCount === QUESTIONS.length) return "Museum Curator";
-  if (correctCount >= 8) return "Master Naturalist";
-  if (correctCount >= 6) return "Field Researcher";
-  if (correctCount >= 4) return "Junior Naturalist";
-  return "First-Time Visitor";
-}
+function showWinner(hPts, gPts, hName, gName) {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  showScreen("s-winner");
 
-function showResults() {
-  el.railFill.style.width = "100%";
-  el.resultsRank.textContent = getRank(state.correctCount);
-  el.finalScore.textContent = pad(state.score, 4);
-  el.resultsCorrect.textContent = `You identified ${state.correctCount} / ${QUESTIONS.length} specimens correctly`;
+  const stamp = $("winner-stamp");
+  let text;
+  if (hPts > gPts) text = `${hName} Wins`;
+  else if (gPts > hPts) text = `${gName} Wins`;
+  else text = "It's a Tie";
+  stamp.textContent = text;
 
-  el.resultsSummary.innerHTML = state.answers
-    .map((a, i) => {
-      const statusClass = a.isCorrect ? "correct" : "wrong";
-      const guessLine = a.isCorrect
-        ? ""
-        : `<div class="summary-guess">You guessed: ${a.guess}</div>`;
-      return `
-        <div class="summary-row ${statusClass}">
-          <div class="summary-plate">${a.icon}</div>
-          <div class="summary-text">
-            <div class="summary-species">${i + 1}. ${a.species}</div>
-            ${guessLine}
-          </div>
-          <div class="summary-status ${statusClass}">${a.isCorrect ? "Identified" : "Missed"}</div>
-        </div>
-      `;
-    })
+  const iAmHostRow = { name: hName, pts: hPts, mine: isHost };
+  const otherRow = { name: gName, pts: gPts, mine: !isHost };
+  const rows = [iAmHostRow, otherRow];
+  const topScore = Math.max(hPts, gPts);
+
+  $("final-scores").innerHTML = rows
+    .map((r) => `
+      <div class="final-row ${r.pts === topScore ? "winner" : ""}">
+        <span class="final-name">${r.name}${r.mine ? " (You)" : ""}</span>
+        <span class="final-pts">${r.pts} pts</span>
+      </div>
+    `)
     .join("");
-
-  showScreen("results");
 }
 
-el.startBtn.addEventListener("click", startQuiz);
-el.nextBtn.addEventListener("click", nextQuestion);
-el.restartBtn.addEventListener("click", startQuiz);
-el.answerBtns.forEach((btn) => {
-  btn.addEventListener("click", () => handleAnswer(Number(btn.dataset.index)));
+// ---- wiring ----
+$("btn-host").addEventListener("click", goHost);
+$("btn-join").addEventListener("click", () => showScreen("s-join"));
+$("start-btn").addEventListener("click", startMatch);
+$("join-btn").addEventListener("click", doJoin);
+$("code-input").addEventListener("input", (e) => {
+  e.target.value = e.target.value.toUpperCase();
 });
+document.querySelectorAll("[data-goto]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.goto;
+    if (target === "s-home") goHome();
+    else showScreen(target);
+  });
+});
+
+showScreen("s-home");

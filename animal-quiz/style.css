@@ -179,6 +179,210 @@ body {
 .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #5e3d16, 0 12px 20px rgba(0,0,0,0.4); }
 .btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #5e3d16, 0 4px 10px rgba(0,0,0,0.35); }
 
+.btn-join {
+  background: linear-gradient(180deg, var(--teal) 0%, #244143 100%);
+  color: #eaf5f4;
+  box-shadow: 0 3px 0 #1a3032, 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.btn-join:hover { box-shadow: 0 5px 0 #1a3032, 0 12px 20px rgba(0,0,0,0.4); }
+.btn-join:active { box-shadow: 0 2px 0 #1a3032, 0 4px 10px rgba(0,0,0,0.35); }
+
+.btn-ghost {
+  background: none;
+  color: var(--ink-soft);
+  box-shadow: none;
+  padding: 12px 20px;
+}
+
+.btn-ghost:hover { box-shadow: none; text-decoration: underline; }
+.btn-ghost:active { box-shadow: none; }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+/* ---------- Lobby (host / join) ---------- */
+.field-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: left;
+  margin: 18px 0 6px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 4px;
+  border: 1.5px solid var(--hairline);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.text-input:focus { border-color: var(--brass); }
+
+.text-input.code-entry {
+  font-family: var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.code-display {
+  font-family: var(--font-mono);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--brass-deep);
+  text-align: center;
+  margin: 16px 0;
+}
+
+.lobby-hint {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.lobby-status {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 14px 0 4px;
+  min-height: 1.2em;
+}
+
+.lobby-error {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--wrong-deep);
+  text-align: center;
+  margin-top: 6px;
+  min-height: 1.2em;
+}
+
+/* ---------- Battle score bar ---------- */
+.scores-bar {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 12px 10px;
+  margin-bottom: 18px;
+}
+
+.score-block {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+.score-name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score-pts {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.score-vs {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--brass-deep);
+  padding: 0 14px;
+}
+
+/* ---------- Result panel (inline, battle mode) ---------- */
+.result-panel {
+  margin-top: 16px;
+  padding: 30px 30px 26px;
+  display: none;
+}
+
+.result-panel.visible { display: block; }
+
+.wait-msg {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ---------- Winner screen ---------- */
+.stamp.large {
+  font-size: 1.6rem;
+  padding: 14px 30px;
+}
+
+.final-scores {
+  text-align: left;
+  margin: 24px 0 30px;
+}
+
+.final-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--brass);
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.final-row.winner { border-left-color: var(--correct); }
+
+.final-name {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.final-pts {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Quiz screen ---------- */
 .quiz-header {
   display: flex;

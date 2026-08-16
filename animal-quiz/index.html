@@ -2,38 +2,90 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>Specimen Drawer</title>
 <link rel="stylesheet" href="style.css" />
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
 <body>
   <div class="stage">
 
-    <section id="start-screen" class="screen active">
+    <!-- HOME -->
+    <section id="s-home" class="screen active">
       <div class="card start-card">
         <p class="eyebrow">Accession Log &middot; Animalia</p>
         <h1>Specimen Drawer</h1>
-        <p class="lede">Ten curious specimens from the animal kingdom, each waiting to be correctly identified. You have limited light before each drawer closes &mdash; answer quickly for a higher rating.</p>
+        <p class="lede">A two-naturalist identification match. Ten specimens, four choices each &mdash; answer fast and answer right to out-identify your opponent.</p>
         <div class="field-count">
+          <div><b>2</b>Naturalists</div>
           <div><b>10</b>Specimens</div>
-          <div><b>4</b>Choices each</div>
-          <div><b>15s</b>Per drawer</div>
+          <div><b>20s</b>Per specimen</div>
         </div>
-        <button id="start-btn" class="btn">Open the Drawer</button>
+        <div class="button-stack">
+          <button id="btn-host" class="btn">Host a Match</button>
+          <button id="btn-join" class="btn btn-join">Join a Match</button>
+        </div>
       </div>
     </section>
 
-    <section id="quiz-screen" class="screen">
+    <!-- HOST LOBBY -->
+    <section id="s-host" class="screen">
+      <div class="card start-card">
+        <p class="eyebrow">Host Lobby</p>
+        <p class="field-label">Your name</p>
+        <input type="text" id="host-name" class="text-input" placeholder="Naturalist name" value="" maxlength="16" />
+        <p class="field-label">Match code</p>
+        <div class="code-display" id="code-disp">------</div>
+        <p class="lobby-hint">Share this code with your opponent so they can join.</p>
+        <div class="lobby-status" id="host-status">Connecting&hellip;</div>
+        <div class="lobby-error" id="host-err"></div>
+        <div class="button-stack">
+          <button id="start-btn" class="btn" style="display:none">Begin the Match</button>
+          <button class="btn btn-ghost" data-goto="s-home">&larr; Back</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN LOBBY -->
+    <section id="s-join" class="screen">
+      <div class="card start-card">
+        <p class="eyebrow">Join Lobby</p>
+        <p class="field-label">Your name</p>
+        <input type="text" id="guest-name" class="text-input" placeholder="Naturalist name" value="" maxlength="16" />
+        <p class="field-label">Match code</p>
+        <input type="text" id="code-input" class="text-input code-entry" placeholder="e.g. AB3XQZ" maxlength="6" />
+        <div class="button-stack">
+          <button id="join-btn" class="btn btn-join">Join Match</button>
+        </div>
+        <div class="lobby-status" id="join-status"></div>
+        <div class="lobby-error" id="join-err"></div>
+        <button class="btn btn-ghost" data-goto="s-home">&larr; Back</button>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="s-game" class="screen">
       <div class="quiz-header">
-        <span id="question-count">Specimen 01 / 10</span>
-        <span id="score-display">Score 0000</span>
+        <span id="specimen-label">Specimen 01 / 10</span>
+        <span id="timer-label">20s</span>
       </div>
       <div class="rail"><div id="rail-fill" class="rail-fill"></div></div>
 
       <div class="light-row">
         <span class="light-label">Light</span>
         <div class="light-track"><div id="light-fill" class="light-fill"></div></div>
-        <span id="light-readout" class="light-readout">15s</span>
+      </div>
+
+      <div class="scores-bar">
+        <div class="score-block">
+          <div class="score-name" id="sc-name1">You</div>
+          <div class="score-pts" id="sc-pts1">0</div>
+        </div>
+        <div class="score-vs">VS</div>
+        <div class="score-block">
+          <div class="score-name" id="sc-name2">Opponent</div>
+          <div class="score-pts" id="sc-pts2">0</div>
+        </div>
       </div>
 
       <div class="card question-card">
@@ -47,29 +99,24 @@
         <button class="answer-btn" data-index="2"><span class="tag-num tag-2">III</span><span class="answer-text"></span></button>
         <button class="answer-btn" data-index="3"><span class="tag-num tag-3">IV</span><span class="answer-text"></span></button>
       </div>
-    </section>
 
-    <section id="feedback-screen" class="screen">
-      <div id="feedback-card" class="card feedback-card">
-        <div id="feedback-stamp" class="stamp">Identified</div>
-        <div id="feedback-icon" class="specimen-plate"></div>
-        <p id="feedback-correct-answer" class="feedback-answer">Correct identification: <b></b></p>
-        <p id="feedback-fact" class="feedback-fact"></p>
-        <div id="feedback-points" class="feedback-points"></div>
-        <button id="next-btn" class="btn">Next Specimen</button>
+      <div id="result-panel" class="card result-panel feedback-card">
+        <div id="result-stamp" class="stamp">Identified</div>
+        <div id="result-icon" class="specimen-plate"></div>
+        <p id="result-correct-answer" class="feedback-answer">Correct identification: <b></b></p>
+        <p id="result-fact" class="feedback-fact"></p>
+        <div id="result-points" class="feedback-points"></div>
+        <div id="wait-msg" class="wait-msg" style="display:none">Waiting for your opponent to answer&hellip;</div>
       </div>
     </section>
 
-    <section id="results-screen" class="screen">
+    <!-- WINNER -->
+    <section id="s-winner" class="screen">
       <div class="card results-card">
-        <p class="eyebrow">Collection Complete</p>
-        <p id="results-rank" class="results-rank">Rank</p>
-        <div class="results-score-number" id="final-score">0</div>
-        <div class="results-score-label">Total Points</div>
-        <p id="results-correct" class="results-correct">You identified 0 / 10 specimens correctly</p>
-        <p class="eyebrow summary-eyebrow">Field Log</p>
-        <div id="results-summary" class="summary-list"></div>
-        <button id="restart-btn" class="btn">Open a New Drawer</button>
+        <p class="eyebrow">Match Complete</p>
+        <div id="winner-stamp" class="stamp large">Winner</div>
+        <div class="final-scores" id="final-scores"></div>
+        <button class="btn" data-goto="s-home">Play Again</button>
       </div>
     </section>
 
