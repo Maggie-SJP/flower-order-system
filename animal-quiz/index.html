@@ -3,82 +3,72 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wild Facts Quiz</title>
+<title>Specimen Drawer</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
+  <div class="stage">
 
-    <!-- START SCREEN -->
     <section id="start-screen" class="screen active">
       <div class="card start-card">
-        <div class="logo">🦁🐙🦉</div>
-        <h1>Wild Facts Quiz</h1>
-        <p class="subtitle">10 wild animal facts most people don't know.<br/>Answer fast for bonus points!</p>
-        <button id="start-btn" class="btn btn-primary">Start Quiz</button>
+        <p class="eyebrow">Accession Log &middot; Animalia</p>
+        <h1>Specimen Drawer</h1>
+        <p class="lede">Ten curious specimens from the animal kingdom, each waiting to be correctly identified. You have limited light before each drawer closes &mdash; answer quickly for a higher rating.</p>
+        <div class="field-count">
+          <div><b>10</b>Specimens</div>
+          <div><b>4</b>Choices each</div>
+          <div><b>15s</b>Per drawer</div>
+        </div>
+        <button id="start-btn" class="btn">Open the Drawer</button>
       </div>
     </section>
 
-    <!-- QUESTION SCREEN -->
     <section id="quiz-screen" class="screen">
-      <header class="quiz-header">
-        <div class="progress-wrap">
-          <div id="progress-bar" class="progress-bar"></div>
-        </div>
-        <div class="quiz-meta">
-          <span id="question-count">Question 1 / 10</span>
-          <span id="score-display">Score: 0</span>
-        </div>
-      </header>
+      <div class="quiz-header">
+        <span id="question-count">Specimen 01 / 10</span>
+        <span id="score-display">Score 0000</span>
+      </div>
+      <div class="rail"><div id="rail-fill" class="rail-fill"></div></div>
 
-      <div class="timer-wrap">
-        <div id="timer-bar" class="timer-bar"></div>
+      <div class="light-row">
+        <span class="light-label">Light</span>
+        <div class="light-track"><div id="light-fill" class="light-fill"></div></div>
+        <span id="light-readout" class="light-readout">15s</span>
       </div>
 
       <div class="card question-card">
+        <p class="eyebrow">Field Note</p>
+        <div id="question-icon" class="specimen-plate"></div>
         <h2 id="question-text">Question text</h2>
       </div>
 
       <div id="answers-grid" class="answers-grid">
-        <button class="answer-btn shape-triangle" data-index="0">
-          <span class="shape">▲</span><span class="answer-text"></span>
-        </button>
-        <button class="answer-btn shape-diamond" data-index="1">
-          <span class="shape">◆</span><span class="answer-text"></span>
-        </button>
-        <button class="answer-btn shape-circle" data-index="2">
-          <span class="shape">●</span><span class="answer-text"></span>
-        </button>
-        <button class="answer-btn shape-square" data-index="3">
-          <span class="shape">■</span><span class="answer-text"></span>
-        </button>
+        <button class="answer-btn" data-index="0"><span class="tag-num tag-0">I</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-index="1"><span class="tag-num tag-1">II</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-index="2"><span class="tag-num tag-2">III</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-index="3"><span class="tag-num tag-3">IV</span><span class="answer-text"></span></button>
       </div>
     </section>
 
-    <!-- FEEDBACK SCREEN -->
     <section id="feedback-screen" class="screen">
       <div id="feedback-card" class="card feedback-card">
-        <div id="feedback-icon" class="feedback-icon">✔</div>
-        <h2 id="feedback-title">Correct!</h2>
-        <p id="feedback-correct-answer" class="feedback-correct-answer"></p>
+        <div id="feedback-stamp" class="stamp">Identified</div>
+        <div id="feedback-icon" class="specimen-plate small"></div>
+        <p id="feedback-correct-answer" class="feedback-answer">Correct identification: <b></b></p>
         <p id="feedback-fact" class="feedback-fact"></p>
         <div id="feedback-points" class="feedback-points"></div>
-        <button id="next-btn" class="btn btn-primary">Next Question</button>
+        <button id="next-btn" class="btn">Next Specimen</button>
       </div>
     </section>
 
-    <!-- RESULTS SCREEN -->
     <section id="results-screen" class="screen">
       <div class="card results-card">
-        <div id="results-emoji" class="results-emoji">🏆</div>
-        <h1>Quiz Complete!</h1>
-        <p id="results-rank" class="results-rank">Wildlife Expert</p>
-        <div class="results-score">
-          <div class="results-score-number" id="final-score">0</div>
-          <div class="results-score-label">points</div>
-        </div>
-        <p id="results-correct" class="results-correct">You got 0 / 10 correct</p>
-        <button id="restart-btn" class="btn btn-primary">Play Again</button>
+        <p class="eyebrow">Collection Complete</p>
+        <p id="results-rank" class="results-rank">Rank</p>
+        <div class="results-score-number" id="final-score">0</div>
+        <div class="results-score-label">Total Points</div>
+        <p id="results-correct" class="results-correct">You identified 0 / 10 specimens correctly</p>
+        <button id="restart-btn" class="btn">Open a New Drawer</button>
       </div>
     </section>
 
