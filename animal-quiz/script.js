@@ -131,12 +131,14 @@ let players = new Map(); // peerId -> { conn, name, score, correctCount, answere
 
 function goHome() {
   if (timerInterval) clearInterval(timerInterval);
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
   if (peer) { try { peer.destroy(); } catch (e) {} }
   peer = null;
   isHost = false;
   qi = 0;
   players = new Map();
-  myScore = 0; myAnswers = []; myConn = null; myName = ""; answered = false;
+  myScore = 0; myAnswers = []; myRawAnswers = []; myConn = null; myName = "";
+  hostPeerId = null; hasStartedPlaying = false; reconnectAttempts = 0; answered = false;
   showScreen("s-home");
 }
 
@@ -161,7 +163,15 @@ function goHost() {
 
 function wireNewPlayer(conn) {
   const id = conn.peer;
-  players.set(id, { conn, name: "", score: 0, correctCount: 0, answered: new Set(), connected: true });
+  const existing = players.get(id);
+  if (existing) {
+    // Same peer ID reconnecting (PeerJS keeps a guest's own ID stable across
+    // reconnects) — reattach the new connection without wiping their progress.
+    existing.conn = conn;
+    existing.connected = true;
+  } else {
+    players.set(id, { conn, name: "", score: 0, correctCount: 0, answered: new Set(), connected: true });
+  }
 
   conn.on("data", (d) => {
     const p = players.get(id);
@@ -264,7 +274,13 @@ let myConn = null;
 let myName = "";
 let myScore = 0;
 let myAnswers = [];
+let myRawAnswers = []; // {qi, a, ms} for every answer sent — replayed on reconnect so the host catches up
 let answered = false;
+let hostPeerId = null;
+let hasStartedPlaying = false;
+let reconnectTimer = null;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 20;
 
 function doJoin() {
   const name = $("guest-name").value.trim() || "Guest";
@@ -277,6 +293,9 @@ function doJoin() {
   myName = name;
   myScore = 0;
   myAnswers = [];
+  myRawAnswers = [];
+  hasStartedPlaying = false;
+  hostPeerId = PEER_PREFIX + code;
   $("join-status").textContent = "Connecting…";
   $("join-err").textContent = "";
   $("join-btn").disabled = true;
@@ -284,29 +303,61 @@ function doJoin() {
   peer = new Peer();
   peer.on("open", () => {
     $("join-status").textContent = "Finding host…";
-    myConn = peer.connect(PEER_PREFIX + code, { reliable: true });
-    wireGuest();
+    connectToHost();
   });
   peer.on("error", () => {
-    $("join-err").textContent = "Couldn't connect. Check the code and try again.";
-    $("join-btn").disabled = false;
+    if (!hasStartedPlaying) {
+      $("join-err").textContent = "Couldn't connect. Check the code and try again.";
+      $("join-btn").disabled = false;
+    }
   });
 }
 
-function wireGuest() {
-  myConn.on("open", () => {
-    myConn.send({ type: "name", name: myName });
-    qi = 0;
-    showPlayerQuestion(0, Date.now() + TL);
-  });
-  myConn.on("data", (d) => {
-    if (d.type === "over") {
-      showPlayerFinal(d.leaderboard);
+function connectToHost() {
+  wireGuestConn(peer.connect(hostPeerId, { reliable: true }));
+}
+
+function wireGuestConn(conn) {
+  myConn = conn;
+
+  conn.on("open", () => {
+    reconnectAttempts = 0;
+    setConnStatus(true);
+    conn.send({ type: "name", name: myName });
+
+    if (!hasStartedPlaying) {
+      hasStartedPlaying = true;
+      qi = 0;
+      showPlayerQuestion(0, Date.now() + TL);
+    } else {
+      // Reconnected mid-game (or after finishing): resend every answer so
+      // far in case the host's dashboard missed any while we were offline.
+      myRawAnswers.forEach((a) => conn.send({ type: "ans", ...a }));
     }
   });
-  myConn.on("close", () => {
-    $("join-err").textContent = "The host disconnected.";
+
+  conn.on("data", (d) => {
+    if (d.type === "over") showPlayerFinal(d.leaderboard);
   });
+
+  conn.on("close", () => scheduleReconnect());
+  conn.on("error", () => scheduleReconnect());
+}
+
+function scheduleReconnect() {
+  setConnStatus(false);
+  if (reconnectTimer || !hasStartedPlaying) return;
+  if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) return;
+  reconnectAttempts += 1;
+  reconnectTimer = setTimeout(() => {
+    reconnectTimer = null;
+    if (peer && !peer.destroyed) connectToHost();
+  }, 3000);
+}
+
+function setConnStatus(ok) {
+  const el = $("conn-status");
+  if (el) el.style.display = ok ? "none" : "block";
 }
 
 function showPlayerQuestion(idx, dl) {
@@ -383,6 +434,7 @@ function submitAnswer(aIdx, dl) {
   $("result-points").textContent = pts > 0 ? `+${pts} points` : "+0 points";
   $("player-next-btn").textContent = qi === QUESTIONS.length - 1 ? "Finish My Drawer" : "Next Specimen";
 
+  myRawAnswers.push({ qi, a: aIdx, ms });
   if (myConn && myConn.open) myConn.send({ type: "ans", qi, a: aIdx, ms });
 }
 
