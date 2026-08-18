@@ -1,93 +1,75 @@
-const ICONS = {
-  octopus: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="50" cy="34" rx="23" ry="19"/><circle cx="41" cy="30" r="2.5" fill="currentColor" stroke="none"/><circle cx="59" cy="30" r="2.5" fill="currentColor" stroke="none"/><path d="M29 46 C22 56 16 60 20 76"/><path d="M37 51 C32 64 26 70 30 84"/><path d="M45 54 C43 70 39 76 41 88"/><path d="M55 54 C57 70 61 76 59 88"/><path d="M63 51 C68 64 74 70 70 84"/><path d="M71 46 C78 56 84 60 80 76"/></svg>',
-  dolphin: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 58 C14 32 34 14 58 18"/><path d="M22 62 C24 44 38 32 54 28"/><path d="M16 58 C10 62 6 66 4 72"/><path d="M50 20 L58 10 L62 24 Z"/><path d="M84 40 L96 32 M84 46 L98 50"/><path d="M58 18 C70 24 80 32 84 42 C74 42 64 40 54 34"/><circle cx="24" cy="54" r="2" fill="currentColor" stroke="none"/></svg>',
-  platypus: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="56" cy="55" rx="26" ry="17"/><circle cx="24" cy="49" r="10"/><ellipse cx="8" cy="50" rx="9" ry="4.5"/><path d="M40,69 L38,79 M50,71 L48,81 M64,71 L66,81 M74,69 L78,79"/><path d="M82,48 C92,44 96,50 90,56"/></svg>',
-  flamingo: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="30" cy="16" r="6"/><path d="M25,17 L14,21 L18,25"/><circle cx="28" cy="14" r="1.3" fill="currentColor" stroke="none"/><path d="M33,21 C42,28 26,36 36,44 C40,48 46,50 48,54"/><ellipse cx="56" cy="60" rx="17" ry="13"/><path d="M50,72 L48,84 L44,84 L42,96"/><path d="M62,70 C68,72 68,78 62,80"/></svg>',
-  seaCucumber: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 52 C14 40 22 34 50 34 C78 34 86 40 86 52 C86 64 78 70 50 70 C22 70 14 64 14 52 Z"/><path d="M28 40 L28 64 M40 37 L40 67 M52 36 L52 68 M64 37 L64 67 M76 40 L76 64"/></svg>',
-  koala: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="26" r="13"/><circle cx="76" cy="26" r="13"/><circle cx="50" cy="46" r="26"/><circle cx="41" cy="42" r="2.4" fill="currentColor" stroke="none"/><circle cx="59" cy="42" r="2.4" fill="currentColor" stroke="none"/><ellipse cx="50" cy="52" rx="5" ry="3.5" fill="currentColor" stroke="none"/></svg>',
-  hummingbird: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="54" cy="55" rx="13" ry="10"/><circle cx="38" cy="48" r="7"/><path d="M31,48 L8,46"/><circle cx="36" cy="46" r="1.6" fill="currentColor" stroke="none"/><path d="M56,47 C68,29 84,27 92,15"/><path d="M58,51 C72,39 86,37 94,29"/><path d="M64,61 L80,57 M64,63 L82,65 M64,59 L78,51"/></svg>',
-  rabbit: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="34" cy="18" rx="8" ry="16" transform="rotate(-18 34 18)"/><ellipse cx="60" cy="16" rx="8" ry="16" transform="rotate(14 60 16)"/><circle cx="50" cy="52" r="24"/><circle cx="42" cy="48" r="2.3" fill="currentColor" stroke="none"/><circle cx="58" cy="48" r="2.3" fill="currentColor" stroke="none"/><circle cx="50" cy="58" r="2" fill="currentColor" stroke="none"/><circle cx="76" cy="70" r="7"/></svg>',
-  horseshoeCrab: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M50,16 C24,16 8,30 8,44 C8,52 18,58 32,58 L68,58 C82,58 92,52 92,44 C92,30 76,16 50,16 Z"/><path d="M32,58 L22,70 M40,60 L34,72 M60,60 L66,72 M68,58 L78,70"/><path d="M50,58 L50,94"/><circle cx="38" cy="28" r="1.8" fill="currentColor" stroke="none"/><circle cx="62" cy="28" r="1.8" fill="currentColor" stroke="none"/></svg>',
-  alligator: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="46" cy="50" rx="32" ry="14"/><path d="M78,42 L98,50 L78,58 Z" fill="currentColor" stroke="none"/><path d="M6,44 L11,50 L6,56 M14,42 L19,50 L14,58"/><circle cx="18" cy="38" r="1.8" fill="currentColor" stroke="none"/><circle cx="27" cy="36" r="1.8" fill="currentColor" stroke="none"/><path d="M28,62 L26,70 M64,62 L66,70"/></svg>',
-};
-
 const QUESTIONS = [
   {
-    question: "Which animal has three hearts?",
-    choices: ["Octopus", "Elephant", "Shark", "Dolphin"],
-    correct: 0,
-    fact: "An octopus has three hearts — two pump blood to the gills, and one pumps it to the rest of the body. That main heart actually stops beating when the octopus swims, which is why they prefer crawling.",
-    icon: ICONS.octopus,
-  },
-  {
-    question: "Which animal can sleep with only half of its brain at a time?",
-    choices: ["Horse", "Dolphin", "Cat", "Owl"],
+    question: "Which Australian colony experienced a major gold rush after discoveries were announced in 1851?",
+    choices: ["South Australia", "Victoria", "Tasmania", "Western Australia"],
     correct: 1,
-    fact: "Dolphins sleep with one half of their brain at a time — and keep one eye open — so they can keep breathing and stay alert to predators while resting.",
-    icon: ICONS.dolphin,
+    fact: "Gold was first found near Bathurst in New South Wales in 1851, but when rich deposits were found at Ballarat and Bendigo later that year, Victoria became the true centre of Australia's gold rush.",
   },
   {
-    question: "Which mammal lays eggs instead of giving birth to live young?",
-    choices: ["Kangaroo", "Armadillo", "Platypus", "Sloth"],
-    correct: 2,
-    fact: "The platypus is one of only a few egg-laying mammals (monotremes), alongside the echidna. It also has no stomach — its esophagus connects straight to its intestine.",
-    icon: ICONS.platypus,
-  },
-  {
-    question: "What is a group of flamingos called?",
-    choices: ["A pod", "A flamboyance", "A murder", "A parade"],
+    question: "What happened in Australia after news of the gold discoveries spread?",
+    choices: [
+      "The population of the goldfields decreased",
+      "Large numbers of people travelled to the goldfields",
+      "The government stopped people from mining",
+      "All mining was moved underground",
+    ],
     correct: 1,
-    fact: "A group of flamingos is called a ‘flamboyance’ — fitting for a bird that turns pink from the pigments in the shrimp and algae it eats.",
-    icon: ICONS.flamingo,
+    fact: "Word of the discoveries spread quickly, and tens of thousands of people — from other Australian colonies and overseas — rushed to the goldfields hoping to strike it rich.",
   },
   {
-    question: "Which animal can expel its internal organs to scare off predators and then regrow them?",
-    choices: ["Starfish", "Jellyfish", "Octopus", "Sea cucumber"],
-    correct: 3,
-    fact: "Sea cucumbers can eject part of their internal organs to confuse or entangle predators, then simply regenerate the lost organs over the following weeks.",
-    icon: ICONS.seaCucumber,
-  },
-  {
-    question: "Which animal has fingerprints so similar to a human's that they could confuse a crime scene?",
-    choices: ["Koala", "Chimpanzee", "Gorilla", "Panda"],
+    question: "Which group became a significant part of the population on the Victorian goldfields?",
+    choices: ["Chinese migrants", "Spanish sailors", "South American soldiers", "African explorers"],
     correct: 0,
-    fact: "Koalas have fingerprints virtually indistinguishable from human fingerprints, even under a microscope — an odd case of unrelated species evolving the same trait.",
-    icon: ICONS.koala,
+    fact: "By the mid-1850s, thousands of Chinese migrants had arrived on the Victorian goldfields, becoming one of the largest and most significant migrant groups of the gold rush era.",
   },
   {
-    question: "Which bird is the only one that can fly backwards?",
-    choices: ["Sparrow", "Hummingbird", "Owl", "Eagle"],
+    question: "What was one reason the Victorian government introduced mining licences?",
+    choices: ["To raise money from miners", "To give miners free equipment", "To stop people travelling to Victoria", "To provide miners with houses"],
+    correct: 0,
+    fact: "The government introduced a licence fee largely as a way to raise revenue from the goldfields — miners had to pay it whether or not they'd actually found any gold.",
+  },
+  {
+    question: "How often did miners have to pay for their licence?",
+    choices: ["Every month", "Every three months", "Every six months", "Once a year"],
+    correct: 0,
+    fact: "Miners were required to pay for their licence every month, regardless of whether their digging had earned them anything — a major source of resentment on the goldfields.",
+  },
+  {
+    question: "What event in 1853 increased tensions between miners and the Victorian government?",
+    choices: ["The discovery of gold at Ophir", "The opening of the first railway", "The burning of the Eureka Hotel", "The arrival of Peter Lalor"],
+    correct: 2,
+    fact: "The burning of the Eureka Hotel followed the acquittal of its owner, James Bentley, over the death of miner James Scobie — an event that inflamed miners' anger at corruption and injustice on the goldfields.",
+  },
+  {
+    question: "What was the name of the miner whose death at the Eureka Hotel became an important part of the events leading to the Eureka Stockade?",
+    choices: ["Peter Lalor", "James Scobie", "Edward Hargraves", "John Basson Humffray"],
     correct: 1,
-    fact: "Hummingbirds are the only birds that can fly backwards, thanks to a unique shoulder joint that lets their wings rotate in a full figure-eight motion.",
-    icon: ICONS.hummingbird,
+    fact: "James Scobie's death outside the Eureka Hotel, and the widely resented acquittal of the hotel's owner, became a rallying point for miners' grievances in the lead-up to the Eureka Stockade.",
   },
   {
-    question: "What is a baby rabbit called?",
-    choices: ["Joey", "Cub", "Kit", "Pup"],
-    correct: 2,
-    fact: "A baby rabbit is called a ‘kit’ (short for kitten). ‘Joey’ is used for kangaroos, opossums, and a few other marsupials.",
-    icon: ICONS.rabbit,
+    question: "What did the miners' Southern Cross flag at Eureka represent?",
+    choices: ["Their support for the British government", "Their demand for miners' rights and political reform", "Their wish to leave Australia", "Their support for the gold licence"],
+    correct: 1,
+    fact: "The Southern Cross flag, flown by the miners at Eureka, became a powerful symbol of their demand for political rights and fair treatment — not a rejection of Britain itself.",
   },
   {
-    question: "Which of these animals has blue blood?",
-    choices: ["Horseshoe crab", "Elephant", "Dog", "Human"],
+    question: "Who was the main leader of the miners during the Eureka Stockade?",
+    choices: ["Peter Lalor", "Edward Hargraves", "Governor Hotham", "James Scobie"],
     correct: 0,
-    fact: "Horseshoe crab blood is blue because it uses copper-based hemocyanin instead of iron-based hemoglobin to carry oxygen. It's also so valuable for detecting bacterial contamination that a quart can sell for thousands of dollars.",
-    icon: ICONS.horseshoeCrab,
+    fact: "Peter Lalor emerged as the miners' leader at the Eureka Stockade, later going on to become a member of the Victorian parliament.",
   },
   {
-    question: "Which of these animals never stops growing for its entire life?",
-    choices: ["Human", "Dog", "Alligator", "Cat"],
-    correct: 2,
-    fact: "Alligators show ‘indeterminate growth’ — they keep growing slowly their whole lives, unlike mammals which stop at maturity. That's why the oldest alligators tend to be the biggest.",
-    icon: ICONS.alligator,
+    question: "On what date did the Eureka Stockade battle take place?",
+    choices: ["1 January 1851", "3 December 1854", "11 November 1854", "25 April 1855"],
+    correct: 1,
+    fact: "The Eureka Stockade battle took place in the early hours of 3 December 1854, when government troops stormed the miners' stockade at Ballarat.",
   },
 ];
 
-const TL = 20000; // ms per specimen
+const TL = 20000; // ms per question
 const MAXP = 1000;
 const MINP = 200;
-const PEER_PREFIX = "specimendrawer-";
+const PEER_PREFIX = "eureka-quiz-";
 
 function $(id) { return document.getElementById(id); }
 
@@ -153,7 +135,7 @@ function goHost() {
 
   peer = new Peer(PEER_PREFIX + code);
   peer.on("open", () => {
-    $("host-status").textContent = "Ready. Share the code above — naturalists can join now.";
+    $("host-status").textContent = "Ready. Share the code above — diggers can join now.";
   });
   peer.on("connection", (conn) => wireNewPlayer(conn));
   peer.on("error", (e) => {
@@ -266,7 +248,7 @@ function renderHostLeaderboard(leaderboard) {
 // ============================================================
 // PLAYER (guest) state & logic
 // Each player runs their own independent loop through all 10
-// questions the moment they join, starting at Specimen 1 no
+// questions the moment they join, starting at Question 1 no
 // matter when they connect. Scores stay private to that player
 // until the host ends the game and broadcasts the leaderboard.
 // ============================================================
@@ -367,7 +349,7 @@ function showPlayerQuestion(idx, dl) {
   $("result-panel").classList.remove("visible");
 
   const q = QUESTIONS[idx];
-  $("specimen-label").textContent = `Specimen ${String(idx + 1).padStart(2, "0")} / ${QUESTIONS.length}`;
+  $("specimen-label").textContent = `Question ${String(idx + 1).padStart(2, "0")} / ${QUESTIONS.length}`;
   $("rail-fill").style.width = `${(idx / QUESTIONS.length) * 100}%`;
   $("question-text").textContent = q.question;
   $("my-score").textContent = myScore;
@@ -417,8 +399,7 @@ function submitAnswer(aIdx, dl) {
   $("my-score").textContent = myScore;
 
   myAnswers.push({
-    icon: q.icon,
-    species: q.choices[q.correct],
+    correctText: q.choices[q.correct],
     guess: aIdx < 0 ? "No answer" : q.choices[aIdx],
     isCorrect: correct,
   });
@@ -427,12 +408,11 @@ function submitAnswer(aIdx, dl) {
   panel.classList.add("visible");
   panel.classList.remove("is-correct", "is-wrong");
   panel.classList.add(correct ? "is-correct" : "is-wrong");
-  $("result-stamp").textContent = aIdx < 0 ? "Time's Up" : (correct ? "Identified" : "Misidentified");
-  $("result-icon").innerHTML = q.icon;
+  $("result-stamp").textContent = aIdx < 0 ? "Time's Up" : (correct ? "Correct" : "Incorrect");
   $("result-correct-answer").querySelector("b").textContent = q.choices[q.correct];
   $("result-fact").textContent = q.fact;
   $("result-points").textContent = pts > 0 ? `+${pts} points` : "+0 points";
-  $("player-next-btn").textContent = qi === QUESTIONS.length - 1 ? "Finish My Drawer" : "Next Specimen";
+  $("player-next-btn").textContent = qi === QUESTIONS.length - 1 ? "Finish My Round" : "Next Question";
 
   myRawAnswers.push({ qi, a: aIdx, ms });
   if (myConn && myConn.open) myConn.send({ type: "ans", qi, a: aIdx, ms });
@@ -442,7 +422,7 @@ function playerAdvance() {
   qi++;
   if (qi >= QUESTIONS.length) {
     const correctCount = myAnswers.filter((a) => a.isCorrect).length;
-    $("player-waiting-summary").textContent = `You identified ${correctCount} / ${QUESTIONS.length} specimens. Your score: ${myScore}.`;
+    $("player-waiting-summary").textContent = `You answered ${correctCount} / ${QUESTIONS.length} correctly. Your score: ${myScore}.`;
     showScreen("s-player-waiting");
   } else {
     showPlayerQuestion(qi, Date.now() + TL);
@@ -456,24 +436,23 @@ function showPlayerFinal(leaderboard) {
   const myId = peer ? peer.id : null;
   const idx = leaderboard.findIndex((row) => row.id === myId);
   const total = leaderboard.length;
-  $("player-rank").textContent = idx >= 0 ? `${ordinal(idx + 1)} of ${total} Naturalists` : "Results";
+  $("player-rank").textContent = idx >= 0 ? `${ordinal(idx + 1)} of ${total} Diggers` : "Results";
   $("player-final-score").textContent = myScore;
 
   const correctCount = myAnswers.filter((a) => a.isCorrect).length;
-  $("player-correct-summary").textContent = `You identified ${correctCount} / ${QUESTIONS.length} specimens correctly`;
+  $("player-correct-summary").textContent = `You answered ${correctCount} / ${QUESTIONS.length} correctly`;
 
   $("player-summary").innerHTML = myAnswers
     .map((a, i) => {
       const statusClass = a.isCorrect ? "correct" : "wrong";
-      const guessLine = a.isCorrect ? "" : `<div class="summary-guess">You guessed: ${a.guess}</div>`;
+      const guessLine = a.isCorrect ? "" : `<div class="summary-guess">You answered: ${a.guess}</div>`;
       return `
         <div class="summary-row ${statusClass}">
-          <div class="summary-plate">${a.icon}</div>
           <div class="summary-text">
-            <div class="summary-species">${i + 1}. ${a.species}</div>
+            <div class="summary-species">${i + 1}. ${a.correctText}</div>
             ${guessLine}
           </div>
-          <div class="summary-status ${statusClass}">${a.isCorrect ? "Identified" : "Missed"}</div>
+          <div class="summary-status ${statusClass}">${a.isCorrect ? "Correct" : "Missed"}</div>
         </div>
       `;
     })

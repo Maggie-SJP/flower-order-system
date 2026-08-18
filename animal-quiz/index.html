@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Specimen Drawer</title>
+<title>Eureka!</title>
 <link rel="stylesheet" href="style.css" />
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -13,13 +13,13 @@
     <!-- HOME -->
     <section id="s-home" class="screen active">
       <div class="card start-card">
-        <p class="eyebrow">Accession Log &middot; Animalia</p>
-        <h1>Specimen Drawer</h1>
-        <p class="lede">A live group identification game. Naturalists can join anytime and work through all 10 specimens at their own pace &mdash; the host reveals everyone's final rank whenever they're ready.</p>
+        <p class="eyebrow">Colonial Record &middot; 1851&ndash;1854</p>
+        <h1>Eureka!</h1>
+        <p class="lede">A live group history quiz on the Victorian gold rush and the Eureka Stockade. Diggers can join anytime and work through all 10 questions at their own pace &mdash; the host reveals everyone's final rank whenever they're ready.</p>
         <div class="field-count">
-          <div><b>&infin;</b>Naturalists</div>
-          <div><b>10</b>Specimens</div>
-          <div><b>20s</b>Per specimen</div>
+          <div><b>&infin;</b>Diggers</div>
+          <div><b>10</b>Questions</div>
+          <div><b>20s</b>Per question</div>
         </div>
         <div class="button-stack">
           <button id="btn-host" class="btn">Host a Game</button>
@@ -34,11 +34,11 @@
         <p class="eyebrow">Host Dashboard</p>
         <p class="field-label">Game code</p>
         <div class="code-display" id="code-disp">------</div>
-        <p class="lobby-hint">Share this code &mdash; naturalists can join anytime and start identifying immediately. Reveal results whenever you're ready.</p>
+        <p class="lobby-hint">Share this code &mdash; diggers can join anytime and start answering immediately. Reveal results whenever you're ready.</p>
         <div class="lobby-status" id="host-status">Connecting&hellip;</div>
         <div class="lobby-error" id="host-err"></div>
 
-        <p class="summary-eyebrow" style="margin-top:22px">Naturalists (<span id="host-progress-count">0</span>)</p>
+        <p class="summary-eyebrow" style="margin-top:22px">Diggers (<span id="host-progress-count">0</span>)</p>
         <div class="roster-list" id="host-progress-list">
           <p class="roster-empty">No one has joined yet.</p>
         </div>
@@ -55,7 +55,7 @@
       <div class="card start-card">
         <p class="eyebrow">Join Lobby</p>
         <p class="field-label">Your name</p>
-        <input type="text" id="guest-name" class="text-input" placeholder="Naturalist name" value="" maxlength="16" />
+        <input type="text" id="guest-name" class="text-input" placeholder="Your name" value="" maxlength="16" />
         <p class="field-label">Game code</p>
         <input type="text" id="code-input" class="text-input code-entry" placeholder="e.g. AB3XQZ" maxlength="6" />
         <div class="button-stack">
@@ -67,16 +67,16 @@
       </div>
     </section>
 
-    <!-- PLAYER: GAME (self-paced, starts at Specimen 1 the moment you join) -->
+    <!-- PLAYER: GAME (self-paced, starts at Question 1 the moment you join) -->
     <section id="s-player-game" class="screen">
       <div class="quiz-header">
-        <span id="specimen-label">Specimen 01 / 10</span>
+        <span id="specimen-label">Question 01 / 10</span>
         <span id="timer-label">20s</span>
       </div>
       <div class="rail"><div id="rail-fill" class="rail-fill"></div></div>
 
       <div class="light-row">
-        <span class="light-label">Light</span>
+        <span class="light-label">Time</span>
         <div class="light-track"><div id="light-fill" class="light-fill"></div></div>
       </div>
 
@@ -86,7 +86,7 @@
       </div>
 
       <div class="card question-card">
-        <p class="eyebrow">Field Note</p>
+        <p class="eyebrow">Dispatch</p>
         <h2 id="question-text">Question text</h2>
       </div>
 
@@ -98,21 +98,20 @@
       </div>
 
       <div id="result-panel" class="card result-panel feedback-card">
-        <div id="result-stamp" class="stamp">Identified</div>
-        <div id="result-icon" class="specimen-plate"></div>
-        <p id="result-correct-answer" class="feedback-answer">Correct identification: <b></b></p>
+        <div id="result-stamp" class="stamp">Correct</div>
+        <p id="result-correct-answer" class="feedback-answer">Correct answer: <b></b></p>
         <p id="result-fact" class="feedback-fact"></p>
         <div id="result-points" class="feedback-points"></div>
-        <button id="player-next-btn" class="btn">Next Specimen</button>
+        <button id="player-next-btn" class="btn">Next Question</button>
       </div>
     </section>
 
     <!-- PLAYER: FINISHED THEIR OWN RUN, WAITING FOR HOST -->
     <section id="s-player-waiting" class="screen">
       <div class="card start-card">
-        <p class="eyebrow">Drawer Closed</p>
+        <p class="eyebrow">Round Complete</p>
         <h1 style="font-size:1.8rem">Nice work!</h1>
-        <p class="lede" id="player-waiting-summary">You identified 0 / 10 specimens.</p>
+        <p class="lede" id="player-waiting-summary">You answered 0 / 10 correctly.</p>
         <div class="lobby-status">Waiting for the host to reveal the final results&hellip;</div>
       </div>
     </section>
@@ -130,12 +129,12 @@
     <!-- PLAYER: FINAL RESULTS -->
     <section id="s-player-final" class="screen">
       <div class="card results-card">
-        <p class="eyebrow">Collection Complete</p>
+        <p class="eyebrow">Your Results</p>
         <p id="player-rank" class="results-rank">Rank</p>
         <div class="results-score-number" id="player-final-score">0</div>
         <div class="results-score-label">Total Points</div>
-        <p id="player-correct-summary" class="results-correct">You identified 0 / 10 specimens correctly</p>
-        <p class="eyebrow summary-eyebrow">Field Log</p>
+        <p id="player-correct-summary" class="results-correct">You answered 0 / 10 correctly</p>
+        <p class="eyebrow summary-eyebrow">Answer Log</p>
         <div id="player-summary" class="summary-list"></div>
         <button class="btn" data-goto="s-home">Play Again</button>
       </div>
