@@ -95,6 +95,17 @@ function calcPts(ms) {
   return Math.round(MINP + (MAXP - MINP) * Math.max(0, 1 - ms / TL));
 }
 
+// Returns a freshly shuffled [{ text, isCorrect }] for a question, so the
+// correct choice never sits in a fixed, memorizable position.
+function shuffleChoices(q) {
+  const arr = q.choices.map((text, i) => ({ text, isCorrect: i === q.correct }));
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 // ============================================================
 // Shared state
 // ============================================================
@@ -163,7 +174,7 @@ function wireNewPlayer(conn) {
       renderProgress();
     }
     if (d.type === "ans") {
-      recordAnswer(id, d.qi, d.a, d.ms);
+      recordAnswer(id, d.qi, d.correct, d.ms);
     }
   });
 
@@ -174,13 +185,11 @@ function wireNewPlayer(conn) {
   });
 }
 
-function recordAnswer(playerId, questionIdx, aIdx, ms) {
+function recordAnswer(playerId, questionIdx, correct, ms) {
   const p = players.get(playerId);
   if (!p || p.answered.has(questionIdx)) return;
   p.answered.add(questionIdx);
 
-  const q = QUESTIONS[questionIdx];
-  const correct = aIdx >= 0 && aIdx === q.correct;
   if (correct) {
     p.score += calcPts(ms);
     p.correctCount += 1;
@@ -256,8 +265,9 @@ let myConn = null;
 let myName = "";
 let myScore = 0;
 let myAnswers = [];
-let myRawAnswers = []; // {qi, a, ms} for every answer sent — replayed on reconnect so the host catches up
+let myRawAnswers = []; // {qi, correct, ms} for every answer sent — replayed on reconnect so the host catches up
 let answered = false;
+let currentChoices = []; // this player's freshly shuffled [{ text, isCorrect }] for the question on screen
 let hostPeerId = null;
 let hasStartedPlaying = false;
 let reconnectTimer = null;
@@ -354,9 +364,10 @@ function showPlayerQuestion(idx, dl) {
   $("question-text").textContent = q.question;
   $("my-score").textContent = myScore;
 
+  currentChoices = shuffleChoices(q);
   const answerBtns = Array.from(document.querySelectorAll("#answers-grid .answer-btn"));
   answerBtns.forEach((btn, i) => {
-    btn.querySelector(".answer-text").textContent = q.choices[i];
+    btn.querySelector(".answer-text").textContent = currentChoices[i].text;
     btn.classList.remove("correct", "wrong", "dim");
     btn.disabled = false;
     btn.onclick = () => submitAnswer(i, dl);
@@ -384,13 +395,13 @@ function submitAnswer(aIdx, dl) {
   const elapsed = Date.now() - (dl - TL);
   const ms = Math.min(TL, Math.max(0, elapsed));
   const q = QUESTIONS[qi];
-  const correct = aIdx >= 0 && aIdx === q.correct;
+  const correct = aIdx >= 0 && currentChoices[aIdx] && currentChoices[aIdx].isCorrect;
   const pts = correct ? calcPts(ms) : 0;
 
   const answerBtns = Array.from(document.querySelectorAll("#answers-grid .answer-btn"));
   answerBtns.forEach((btn, i) => {
     btn.disabled = true;
-    if (i === q.correct) btn.classList.add("correct");
+    if (currentChoices[i].isCorrect) btn.classList.add("correct");
     else if (i === aIdx) btn.classList.add("wrong");
     else btn.classList.add("dim");
   });
@@ -400,7 +411,7 @@ function submitAnswer(aIdx, dl) {
 
   myAnswers.push({
     correctText: q.choices[q.correct],
-    guess: aIdx < 0 ? "No answer" : q.choices[aIdx],
+    guess: aIdx < 0 ? "No answer" : currentChoices[aIdx].text,
     isCorrect: correct,
   });
 
@@ -414,8 +425,8 @@ function submitAnswer(aIdx, dl) {
   $("result-points").textContent = pts > 0 ? `+${pts} points` : "+0 points";
   $("player-next-btn").textContent = qi === QUESTIONS.length - 1 ? "Finish My Round" : "Next Question";
 
-  myRawAnswers.push({ qi, a: aIdx, ms });
-  if (myConn && myConn.open) myConn.send({ type: "ans", qi, a: aIdx, ms });
+  myRawAnswers.push({ qi, correct, ms });
+  if (myConn && myConn.open) myConn.send({ type: "ans", qi, correct, ms });
 }
 
 function playerAdvance() {
