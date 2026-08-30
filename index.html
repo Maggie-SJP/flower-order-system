@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');}catch(e){}</script>
 <title>QLD Driver Licence Guide</title>
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -27,10 +28,19 @@
     <a class="nav-link" data-color="p2" href="p2.html"><span class="nav-dot"></span>P2 &mdash; Green P</a>
     <a class="nav-link" data-color="open" href="open.html"><span class="nav-dot"></span>Open Licence</a>
   </div>
+  <div class="nav-group">
+    <div class="nav-label">Tools</div>
+    <a class="nav-link" data-color="tool" href="age-checker.html"><span class="nav-dot"></span>Find My Stage</a>
+    <a class="nav-link" data-color="tool" href="quiz.html"><span class="nav-dot"></span>Quiz</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Site</div>
+    <a class="nav-link" data-color="tool" href="settings.html"><span class="nav-dot"></span>Settings</a>
+  </div>
   <div class="sidebar-footer">Queensland graduated licensing scheme &middot; independent guide</div>
 </nav>
 
-<main class="main">
+<main class="main" id="page-main">
 
   <section class="hero">
     <span class="hero-eyebrow">Queensland &middot; Graduated Licensing Scheme</span>
@@ -92,6 +102,22 @@
     </div>
   </section>
 
+  <section class="section">
+    <h2 class="section-title"><span class="icon">★</span>Try the interactive tools</h2>
+    <div class="two-col">
+      <a class="card" href="age-checker.html" style="display:block;">
+        <span class="tag">Interactive</span>
+        <h4>Find My Stage</h4>
+        <p>Enter your date of birth and see which stage of the journey you'd likely be at right now.</p>
+      </a>
+      <a class="card" href="quiz.html" style="display:block;">
+        <span class="tag">15 Questions</span>
+        <h4>Take the Recap Quiz</h4>
+        <p>Multiple-choice quiz covering all four stages — see how much you remember.</p>
+      </a>
+    </div>
+  </section>
+
   <footer class="site-footer">
     This guide is based on independent research for general information purposes and isn't official government advice. Rules, fees and test formats can change — always confirm current requirements with the Queensland Department of Transport and Main Roads (TMR) before relying on them.
   </footer>
@@ -99,5 +125,6 @@
 </main>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/editor.js"></script>
 </body>
 </html>

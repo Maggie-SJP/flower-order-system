@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');}catch(e){}</script>
 <title>P1 Licence &mdash; QLD Driver Licence Guide</title>
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -27,10 +28,19 @@
     <a class="nav-link" data-color="p2" href="p2.html"><span class="nav-dot"></span>P2 &mdash; Green P</a>
     <a class="nav-link" data-color="open" href="open.html"><span class="nav-dot"></span>Open Licence</a>
   </div>
+  <div class="nav-group">
+    <div class="nav-label">Tools</div>
+    <a class="nav-link" data-color="tool" href="age-checker.html"><span class="nav-dot"></span>Find My Stage</a>
+    <a class="nav-link" data-color="tool" href="quiz.html"><span class="nav-dot"></span>Quiz</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Site</div>
+    <a class="nav-link" data-color="tool" href="settings.html"><span class="nav-dot"></span>Settings</a>
+  </div>
   <div class="sidebar-footer">Queensland graduated licensing scheme &middot; independent guide</div>
 </nav>
 
-<main class="main">
+<main class="main" id="page-main">
 
   <section class="hero">
     <span class="hero-eyebrow">Stage 2 of 4 &middot; Provisional</span>
@@ -87,5 +97,6 @@
 </main>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/editor.js"></script>
 </body>
 </html>

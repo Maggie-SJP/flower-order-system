@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');}catch(e){}</script>
+<title>Find My Stage &mdash; QLD Driver Licence Guide</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body class="page-tool" style="--accent: var(--accent-home);">
+
+<div class="mobile-topbar">
+  <div class="brand"><span class="brand-mark">QL</span> Licence Guide</div>
+  <button class="nav-toggle" aria-label="Open menu">☰</button>
+</div>
+<div class="scrim"></div>
+
+<nav class="sidebar">
+  <div class="brand"><span class="brand-mark">QL</span> Licence Guide</div>
+  <div class="nav-group">
+    <div class="nav-label">Overview</div>
+    <a class="nav-link" href="index.html"><span class="nav-dot"></span>Home</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Licence Stages</div>
+    <a class="nav-link" data-color="learner" href="learner.html"><span class="nav-dot"></span>Learner Licence</a>
+    <a class="nav-link" data-color="p1" href="p1.html"><span class="nav-dot"></span>P1 &mdash; Red P</a>
+    <a class="nav-link" data-color="p2" href="p2.html"><span class="nav-dot"></span>P2 &mdash; Green P</a>
+    <a class="nav-link" data-color="open" href="open.html"><span class="nav-dot"></span>Open Licence</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Tools</div>
+    <a class="nav-link active" data-color="tool" href="age-checker.html"><span class="nav-dot"></span>Find My Stage</a>
+    <a class="nav-link" data-color="tool" href="quiz.html"><span class="nav-dot"></span>Quiz</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Site</div>
+    <a class="nav-link" data-color="tool" href="settings.html"><span class="nav-dot"></span>Settings</a>
+  </div>
+  <div class="sidebar-footer">Queensland graduated licensing scheme &middot; independent guide</div>
+</nav>
+
+<main class="main" id="page-main">
+
+  <section class="hero">
+    <span class="hero-eyebrow">Interactive Tool</span>
+    <h1>Find My Stage</h1>
+    <p class="lead">Enter your date of birth and we'll estimate where you'd be in the Queensland graduated licensing journey right now.</p>
+  </section>
+
+  <section class="section">
+    <div class="checker-box">
+      <h2 class="section-title" style="margin-bottom: 20px;"><span class="icon">1</span>Your date of birth</h2>
+      <form id="checker-form">
+        <div class="field-row">
+          <div class="field">
+            <label for="birth-day">Day</label>
+            <select id="birth-day" class="input" required>
+              <option value="">Day</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="birth-month">Month</label>
+            <select id="birth-month" class="input" required>
+              <option value="">Month</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="birth-year">Year</label>
+            <select id="birth-year" class="input" required>
+              <option value="">Year</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Find My Stage &rarr;</button>
+        </div>
+        <div id="checker-error" class="error-text"></div>
+      </form>
+
+      <div id="result-panel" class="result-panel">
+        <div id="result-badge" class="result-badge"></div>
+        <h3 id="result-title"></h3>
+        <p id="result-subtitle" class="body-text" style="margin-bottom: 4px; font-weight: 600;"></p>
+        <div id="result-age" class="result-age"></div>
+        <p id="result-body" class="body-text"></p>
+        <div class="result-actions">
+          <a id="result-link" class="btn btn-primary" href="#"></a>
+          <a class="btn btn-ghost" href="quiz.html">Take the recap quiz &rarr;</a>
+        </div>
+      </div>
+
+      <div class="disclaimer-note">
+        This is an estimate based on standard progression timing and your age alone. Your actual stage depends on when you got your Learner licence, your completed logbook hours, and your test results.
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    This guide is based on independent research for general information purposes and isn't official government advice. Rules, fees and test formats can change — always confirm current requirements with the Queensland Department of Transport and Main Roads (TMR) before relying on them.
+  </footer>
+
+</main>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/age-checker.js"></script>
+<script src="assets/js/editor.js"></script>
+</body>
+</html>
