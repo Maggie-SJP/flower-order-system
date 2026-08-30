@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');}catch(e){}</script>
+<title>Settings &mdash; QLD Driver Licence Guide</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body class="page-tool" data-no-edit="true" style="--accent: var(--accent-home);">
+
+<div class="mobile-topbar">
+  <div class="brand"><span class="brand-mark">QL</span> Licence Guide</div>
+  <button class="nav-toggle" aria-label="Open menu">☰</button>
+</div>
+<div class="scrim"></div>
+
+<nav class="sidebar">
+  <div class="brand"><span class="brand-mark">QL</span> Licence Guide</div>
+  <div class="nav-group">
+    <div class="nav-label">Overview</div>
+    <a class="nav-link" href="index.html"><span class="nav-dot"></span>Home</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Licence Stages</div>
+    <a class="nav-link" data-color="learner" href="learner.html"><span class="nav-dot"></span>Learner Licence</a>
+    <a class="nav-link" data-color="p1" href="p1.html"><span class="nav-dot"></span>P1 &mdash; Red P</a>
+    <a class="nav-link" data-color="p2" href="p2.html"><span class="nav-dot"></span>P2 &mdash; Green P</a>
+    <a class="nav-link" data-color="open" href="open.html"><span class="nav-dot"></span>Open Licence</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Tools</div>
+    <a class="nav-link" data-color="tool" href="age-checker.html"><span class="nav-dot"></span>Find My Stage</a>
+    <a class="nav-link" data-color="tool" href="quiz.html"><span class="nav-dot"></span>Quiz</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Site</div>
+    <a class="nav-link active" data-color="tool" href="settings.html"><span class="nav-dot"></span>Settings</a>
+  </div>
+  <div class="sidebar-footer">Queensland graduated licensing scheme &middot; independent guide</div>
+</nav>
+
+<main class="main" id="page-main">
+
+  <section class="hero">
+    <span class="hero-eyebrow">Site Settings</span>
+    <h1>Settings</h1>
+    <p class="lead">Switch between light and dark display, or unlock edit mode to customise the pages yourself.</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title"><span class="icon">1</span>Appearance</h2>
+    <div class="checker-box">
+      <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 16px;">Choose how the site looks. This is saved to this device only.</p>
+      <div class="toggle-row">
+        <button type="button" class="toggle-btn" id="theme-light">Light</button>
+        <button type="button" class="toggle-btn" id="theme-dark">Dark</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title"><span class="icon">2</span>Editing</h2>
+    <div class="checker-box">
+      <div id="edit-status" class="status-line"><span class="status-dot" id="edit-status-dot"></span><span id="edit-status-text"></span></div>
+
+      <div id="edit-locked-view">
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 16px;">Enter the edit password to add boxes, edit text, and change fonts, sizes and colours on any page.</p>
+        <form id="unlock-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="edit-password">Password</label>
+              <input type="password" id="edit-password" class="input" autocomplete="off" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Unlock Edit Mode &rarr;</button>
+          </div>
+          <div id="edit-password-error" class="error-text">Incorrect password.</div>
+        </form>
+      </div>
+
+      <div id="edit-unlocked-view" style="display:none;">
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 16px;">Edit mode is on. Visit any page and a floating toolbar will let you add boxes, type new text, and change fonts, sizes and colours. Use <strong>Save Changes</strong> on that toolbar to keep your edits, or <strong>Done Editing</strong> to exit.</p>
+        <div class="hero-actions" style="margin-top:0;">
+          <a class="btn btn-primary" href="index.html">Go Start Editing &rarr;</a>
+          <button type="button" class="btn btn-ghost" id="lock-edit-btn">Turn Off Edit Mode</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title"><span class="icon">3</span>Reset</h2>
+    <div class="checker-box">
+      <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0 0 16px;">Remove all saved boxes and text/style edits you've made on this device, and restore every page to its original content.</p>
+      <button type="button" class="btn btn-ghost" id="reset-edits-btn">Reset All Page Edits</button>
+    </div>
+  </section>
+
+  <div class="disclaimer-note" style="margin-top: 8px;">
+    This is a lightweight, front-end-only editor — there's no backend, so the password is just a soft gate (not real security) and saved edits are stored in this browser only. They won't appear for other visitors, and clearing your browser data will remove them.
+  </div>
+
+</main>
+
+<script src="assets/js/main.js"></script>
+<script>
+  const PASSWORD = "zoe2026";
+
+  function getTheme() { return localStorage.getItem("theme") || "light"; }
+  function setTheme(t) {
+    localStorage.setItem("theme", t);
+    document.documentElement.setAttribute("data-theme", t);
+    renderTheme();
+  }
+  function renderTheme() {
+    const t = getTheme();
+    document.getElementById("theme-light").classList.toggle("active", t === "light");
+    document.getElementById("theme-dark").classList.toggle("active", t === "dark");
+  }
+  document.getElementById("theme-light").addEventListener("click", () => setTheme("light"));
+  document.getElementById("theme-dark").addEventListener("click", () => setTheme("dark"));
+  renderTheme();
+
+  function isEditActive() { return localStorage.getItem("editModeActive") === "true"; }
+  function renderEdit() {
+    const active = isEditActive();
+    document.getElementById("edit-locked-view").style.display = active ? "none" : "block";
+    document.getElementById("edit-unlocked-view").style.display = active ? "block" : "none";
+    document.getElementById("edit-status-dot").classList.toggle("on", active);
+    document.getElementById("edit-status-text").textContent = active ? "Edit mode is ON" : "Edit mode is OFF";
+  }
+  document.getElementById("unlock-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const val = document.getElementById("edit-password").value;
+    const err = document.getElementById("edit-password-error");
+    if (val === PASSWORD) {
+      localStorage.setItem("editModeActive", "true");
+      err.classList.remove("show");
+      document.getElementById("edit-password").value = "";
+      renderEdit();
+    } else {
+      err.classList.add("show");
+    }
+  });
+  document.getElementById("lock-edit-btn").addEventListener("click", () => {
+    localStorage.setItem("editModeActive", "false");
+    renderEdit();
+  });
+  renderEdit();
+
+  document.getElementById("reset-edits-btn").addEventListener("click", () => {
+    if (!confirm("This will remove all saved page edits on this device. Continue?")) return;
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith("pageEdits:"))
+      .forEach((k) => localStorage.removeItem(k));
+    alert("All saved edits have been cleared.");
+  });
+</script>
+</body>
+</html>

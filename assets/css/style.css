@@ -18,6 +18,29 @@
   --radius: 14px;
 }
 
+:root[data-theme="dark"] {
+  --bg-grad: linear-gradient(135deg, #0b0d12 0%, #14111c 50%, #0d1117 100%);
+  --bg-elevated: #1a1f2b;
+  --card: #171b24;
+  --card-hover: #232838;
+  --border: #2a3040;
+  --text: #e7e9ee;
+  --text-dim: #9aa1b2;
+  --text-faint: #666e82;
+
+  --accent-home: #7c8cf8;
+  --accent-learner: #3b82f6;
+  --accent-p1: #ef4444;
+  --accent-p2: #22c55e;
+  --accent-open: #f59e0b;
+}
+
+:root[data-theme="dark"] .sidebar,
+:root[data-theme="dark"] .mobile-topbar {
+  background: rgba(23, 27, 36, 0.82);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -610,4 +633,109 @@ footer.site-footer {
   background: rgba(15, 23, 42, 0.25);
   z-index: 30;
 }
+
+/* ---------- Settings page ---------- */
+
+.toggle-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.toggle-btn {
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.toggle-btn.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  color: var(--accent);
+}
+
+.status-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--text-faint); }
+.status-dot.on { background: #16a34a; }
+
+/* ---------- Live edit toolbar ---------- */
+
+.editor-toolbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.2);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  z-index: 70;
+  max-width: 94vw;
+}
+
+.editor-toolbar .et-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-home);
+  margin-right: 2px;
+}
+
+.editor-toolbar select,
+.editor-toolbar input[type="color"] {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-family: inherit;
+}
+
+.editor-toolbar input[type="color"] {
+  padding: 2px;
+  width: 34px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.editor-toolbar .btn { padding: 7px 12px; font-size: 0.8rem; }
+
+.editor-hint {
+  position: fixed;
+  bottom: 82px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: var(--card);
+  font-size: 0.72rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  opacity: 0.9;
+  z-index: 70;
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.editor-selected { outline: 2px dashed var(--accent-home) !important; outline-offset: 2px; }
+[contenteditable="true"] { outline: none; }
 .scrim.open { display: block; }

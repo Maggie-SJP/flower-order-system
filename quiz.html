@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');}catch(e){}</script>
 <title>Quiz &mdash; QLD Driver Licence Guide</title>
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
@@ -32,10 +33,14 @@
     <a class="nav-link" data-color="tool" href="age-checker.html"><span class="nav-dot"></span>Find My Stage</a>
     <a class="nav-link active" data-color="tool" href="quiz.html"><span class="nav-dot"></span>Quiz</a>
   </div>
+  <div class="nav-group">
+    <div class="nav-label">Site</div>
+    <a class="nav-link" data-color="tool" href="settings.html"><span class="nav-dot"></span>Settings</a>
+  </div>
   <div class="sidebar-footer">Queensland graduated licensing scheme &middot; independent guide</div>
 </nav>
 
-<main class="main">
+<main class="main" id="page-main">
 
   <section class="hero">
     <span class="hero-eyebrow">15 Questions &middot; Multiple Choice</span>
@@ -71,5 +76,6 @@
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/quiz.js"></script>
+<script src="assets/js/editor.js"></script>
 </body>
 </html>
