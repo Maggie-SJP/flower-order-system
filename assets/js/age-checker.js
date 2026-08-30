@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tooYoung: {
       color: "var(--accent-home)",
       badge: "?",
-      title: "Not Yet!",
-      subtitle: "You're too young to start your driving journey just yet.",
-      body: "Hang tight — you can enrol in PrepL, the online road rules program, from 15 years and 11 months old, and sit the in-person written test from 16.",
+      title: "Not Yet — But Get Ready!",
+      subtitle: "You're too young to start just yet, but here's how to prepare for your Learner licence.",
+      body: "From 15 years and 11 months old, you can enrol in PrepL, Queensland's online interactive learning program — or wait until you're 16 to sit the in-person written road rules test. In the meantime, start reading up on the road rules, and think about who could supervise you once you're ready: they'll need to hold an open driver licence.",
       linkHref: "learner.html",
       linkLabel: "Preview the Learner stage",
     },
@@ -60,37 +60,27 @@ document.addEventListener("DOMContentLoaded", () => {
       color: "var(--accent-p1)",
       badge: "P1",
       title: "Time to Hit the Road!",
-      subtitle: "At your age, you could be eligible for your P1 (Red P) licence.",
-      body: "Once you've held your Learner licence for 12 months and finished your 100 logbook hours, you can sit your practical driving test and move up to a P1 (Red P) licence.",
+      subtitle: "At your age, the standard next step is a P1 (Red P) licence.",
+      body: "Once you've held your Learner licence for 12 months and finished your 100 logbook hours, you can sit the practical driving test and move up to a P1 (Red P) licence. Good to know: if you're still on your Learner licence when you turn 25, QLD lets you skip P1 entirely and jump straight to P2. From age 20, you'll also meet the minimum age for an Open licence, once your provisional tenure is complete.",
       linkHref: "p1.html",
       linkLabel: "See full P1 requirements",
     },
-    p2: {
+    p2Skip: {
       color: "var(--accent-p2)",
       badge: "P2",
-      title: "Nearly There!",
-      subtitle: "You're likely at the P2 (Green P) stage of your journey.",
-      body: "After holding your P1 for 12 months and passing the Hazard Perception Test, you'll move up to a P2 (Green P) licence until you reach Open licence age.",
+      title: "You Skip P1!",
+      subtitle: "At 25 or older, Queensland lets you jump straight from Learner to P2.",
+      body: "If this is your first time getting a provisional licence, you skip the P1 (Red P) stage entirely. Once you've held your Learner licence for 12 months and passed the practical driving test, you go straight to a P2 (Green P) licence. You've also already passed the minimum age (20) for an Open licence — once your provisional tenure is done, you can apply for that too.",
       linkHref: "p2.html",
       linkLabel: "See full P2 requirements",
-    },
-    open: {
-      color: "var(--accent-open)",
-      badge: "Open",
-      title: "You're All Set!",
-      subtitle: "At your age, you could already be eligible for a full Open licence.",
-      body: "Once you've completed the required time on your provisional licence, you can apply online or in person at a Department of Transport and Main Roads Customer Service Centre.",
-      linkHref: "open.html",
-      linkLabel: "See full Open licence details",
     },
   };
 
   function getStageKey(totalMonths) {
     if (totalMonths < 191) return "tooYoung";
     if (totalMonths < 204) return "learner";
-    if (totalMonths < 216) return "p1";
-    if (totalMonths < 240) return "p2";
-    return "open";
+    if (totalMonths < 300) return "p1";
+    return "p2Skip";
   }
 
   function preciseAge(birth, now) {
